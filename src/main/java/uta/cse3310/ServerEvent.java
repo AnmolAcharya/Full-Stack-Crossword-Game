@@ -1,8 +1,6 @@
-class ServerEvent{
-	public ServerEvent(){
+package uta.cse3310;
 
-	}
-
+public class ServerEvent {
+    int GameId;
+        
 }
-
-

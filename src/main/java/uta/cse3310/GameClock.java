@@ -15,6 +15,7 @@ public class GameClock{
     	}
 
     	public String getTime() {
+		return minute + ": " + second;
     	}
 	
 

@@ -9,7 +9,8 @@ public class Lobby{
 	
 	}
 
-	public void addPlayerToGame(){
+	public void addPlayerToGame(Player player, Game game){
+		
 	}
 
 }

@@ -7,7 +7,7 @@ public class Game{
 	public Grid grid;
 	public Player[] players;
 	public Player[] leaderboard;
-	public ChatBox[] chatBox;
+	public ChatBox chatBox;
 	public GameClock gameClock;
 	
 	public Game(){

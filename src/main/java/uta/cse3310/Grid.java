@@ -2,26 +2,26 @@ package uta.cse3310;
 
 public class Grid{
 	
-	public char[][] grid;
+	public Letter[][] grid;
 	public String[] wordBank;
 	
 	public Grid(){
 
 	}
 	
-	public boolean validateSelection(){
+	public boolean validateSelection(Letter first, Letter last){
 		return false;
 	}
 	
-	public boolean checkHorizontal(){
+	public boolean checkHorizontal(Letter first, Letter last){
 		return false;
 	}
 	
-	public boolean checkVertical(){
+	public boolean checkVertical(Letter first, Letter last){
 		return false;
 	}
 	
-	public boolean checkDiagonal(){
+	public boolean checkDiagonal(Letter first, Letter last){
 		return false;
 	}
 	
@@ -29,7 +29,7 @@ public class Grid{
 		return wordBank;
 	}
 	
-	public char[][] fillGrid(){
+	public Letter[][] fillGrid(){
 		return grid;
 	}
 	

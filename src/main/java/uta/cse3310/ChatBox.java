@@ -4,6 +4,13 @@ public class ChatBox{
 	
 	public Message[] messages;
 
+	public ChatBox() {
+
+	}
+
+	public void sendMessage(String msg) {
+		
+	}
 }
 
 

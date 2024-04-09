@@ -3,11 +3,13 @@
 package uta.cse3310;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Collections;
 
 import org.java_websocket.WebSocket;
@@ -24,7 +26,21 @@ import com.google.gson.GsonBuilder;
 
 
 public class App extends WebSocketServer {
- 
+  
+  public ArrayList<String> words = new ArrayList<String>();
+  public ArrayList<String> getWords(){
+    String str;
+    try{
+      BufferedReader reader = new BufferedReader(new FileReader("filtered_words.txt"));
+      while((str = reader.readLine())!=null)
+        this.words.add(str);
+      reader.close();
+    }
+    catch(IOException e){
+      e.printStackTrace();
+    }
+    return this.words;
+  }
 
   public App(int port) {
     super(new InetSocketAddress(port));

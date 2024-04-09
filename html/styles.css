@@ -1,0 +1,453 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+body {
+    display: block;
+    background-color: #1E1F25;
+    color: white;
+    font-family: "Ubuntu", sans-serif;
+    font-style: normal;
+    /*overflow: hidden;*/
+    font-size: 16px;
+    margin: 0;
+}
+
+#landingScreen, #lobbyScreen, #gameScreen {
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+p {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+*:focus {
+    outline: none;
+}
+
+button, input, li {
+    font-family: "Ubuntu", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+}
+
+/*--- UTILITIES ---*/
+.hidden {
+    display: none !important;
+}
+
+/*--- LANDING PAGE ---*/
+
+#landingScreen, form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#landingScreen input[type=text] {
+    background-color: #D9D9D9;
+    width: 275px;
+    height: 50px;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 40px 0 24px 0;
+}
+
+@keyframes colorCycle {
+    0% { color: #00FFFF; text-shadow: 0 0 50px #00FFFF; }
+    25% { color: #FF00F5; text-shadow: 0 0 50px #FF00F5; }
+    50% { color: #FF000F; text-shadow: 0 0 50px #FF000F; }
+    75% { color: #00FF94; text-shadow: 0 0 50px #00FF94; }
+    100% { color: #FAFF00; text-shadow: 0 0 50px #FAFF00; }
+  }
+
+.usernameSubmit {
+    background-color: transparent;
+    border: none;
+    font-family: "Ubuntu", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 2rem;
+    padding: 0;
+}
+
+.usernameSubmit:enabled {
+    animation: colorCycle 8s infinite linear;
+    cursor: pointer;
+}
+
+.usernameSubmit:disabled {
+    color: #343434;
+    cursor: default;
+}
+
+/*--- LOBBY ---*/
+
+#lobbyScreen {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 88px;
+}
+
+#lobbyScreen h2 {
+    text-align: center;
+}
+
+.gameMenu h2 {
+    margin-bottom: 32px;
+    font-weight: 700;
+}
+
+.concurrentLeaderboard h2 {
+    margin-bottom: 40px;
+}
+
+.allTimeLeaderboard h2 {
+    margin-bottom: 14px;
+}
+
+.allTimeLeaderboard, .concurrentLeaderboard, .gameMenu {
+    height: fit-content;
+    margin-bottom: 10vh
+}
+
+.lobbyLeaderboards {
+    width: 28vw;
+    height: 60vh;
+    background-color: #07091A;
+    border: 2px solid white;
+    overflow: hidden;
+}
+
+.allTimeLeaderboard .lobbyLeaderboards {
+    border-radius: 0 12px 12px 0;
+    border-left: 0;
+}
+
+.concurrentLeaderboard .lobbyLeaderboards{
+    border-radius: 12px 0 0 12px;
+    border-right: 0;
+}
+
+.gameSelection {
+    background-color: #07091A;
+    border-radius: 12px;
+    height: 60vh;
+    overflow-y: auto;
+}
+
+.menuActions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+.menuActions button {
+    background-color: #1E3CE6;
+    width: 200px;
+    height: 58px;
+    border: 2px solid white;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.menuActions button:disabled {
+    background-color: #464646;
+    color: #949494;
+    border: none;
+    cursor: default;
+}
+
+.gameList {
+    list-style: none;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+}
+
+.gameListItem {
+    background-color: #2a2a9d;
+    padding: 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.5rem;
+}
+  
+.gameListItem:hover, .gameListItem:focus {
+    outline: none;
+    background-color: #3a3abf;
+}
+
+.allTimeList {
+    counter-reset: all-time-counter; /* Reset the counter here in the list */
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    overflow-y: auto;
+}
+
+.leaderListItem {
+    counter-increment: all-time-counter;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #1E3CE6;
+    padding: 16px;
+    padding-right: 48px;
+    font-size: 1.5rem;
+    position: relative;
+}
+
+.leaderListItem::before {
+    content: counter(all-time-counter) ". "; /* Add a period and space after the number */
+    margin-right: 0.5em;
+}
+
+.lobbyLeaderboards .wordsFound {
+    margin-left: auto;
+}
+
+.leaderLabels {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 16px 8px 48px;
+}
+
+.leaderLabels p {
+    margin: 0;
+}
+
+*::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: rgb(84, 84, 86);
+    border-radius: 10px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+*::-webkit-scrollbar {
+    width: 14px;
+}
+
+
+/*--- GAME SCREEN ---*/
+
+#gameScreen {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 24px;
+    gap: 32px;
+}
+
+.leftControl, .rightControl {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.leftControl {
+    width: 40vw;
+}
+
+.rightControl {
+    width: 60vw;
+}
+
+.exitButton {
+    background-color: transparent;
+    color: white;
+    font-size: 2rem;
+    font-weight: 400;
+    border: none;
+    cursor: pointer;
+}
+
+.exitButton:hover {
+    color: #FF1616;
+}
+
+.gameLeaderboard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.gameLeaderboard h2 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.gameLeaderboard .leaderLabels {
+    padding: 0 16px 8px 56px;
+}
+
+.leaderboard {
+    width: 100%;
+    border: 4px solid white;
+    border-radius: 12px;
+}
+
+.leaderboardList {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    gap: 8px;
+    margin: 0;
+}
+
+.player {
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    font-size: 2rem;
+    font-weight: 500;
+    color: white;
+    border-radius: 12px;
+    padding: 32px;
+}
+
+#redPlayer {
+    background-color: #E51B1B;
+}
+
+#bluePlayer {
+    background-color: #106BFF;
+}
+
+#pinkPlayer {
+    background-color: #E100A5;
+}
+
+#greenPlayer {
+    background-color: #06A600;
+}
+
+.gameChat {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 24vh;
+    background-color: #131317;
+}
+
+.messageList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+}
+
+.message {
+    padding: 8px;
+    font-size: 1rem;
+}
+
+.redMessage {
+    color: #E51B1B;
+}
+
+.blueMessage {
+    color: #106BFF;
+}
+
+.pinkMessage {
+    color: #E100A5;
+}
+
+.greenMessage {
+    color: #06A600;
+}
+
+.chatForm {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #0B0C0F;
+    height: 32px;
+    padding: 2px 8px;
+}
+
+.chatInput {
+    background-color: transparent;
+    color: white;
+    border: none;
+    height: 100%;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.wordGrid {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    grid-gap: 2px;
+    border: 5px solid black;
+    height: 100%;
+    width: auto;
+}
+
+.gridItem {
+    background-color: white;
+    color: black;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    background-clip: padding-box;
+    aspect-ratio: 1/1;
+}
+
+.wordBank {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: white;
+    border: 5px solid black;
+    box-sizing: border-box;
+    padding: 24px 16px;
+    height: 128px;
+    border-radius: 12px;
+}
+
+.wordBank p {
+    color: black;
+
+}

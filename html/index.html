@@ -3,10 +3,162 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
+  <link rel="stylesheet" href="styles.css">
+  <title>TWSG</title>
 </head>
 <body>
   
+  <!--Landing Page / Enter User Name-->
+  <div id="landingScreen" class="hidden">
+    <h1>Enter your player name to start</h1>
+    <form action="">
+      <input type="text" class="usernameInput" maxlength="12">
+      <button class="usernameSubmit" disabled>Start</button>
+    </form>
+  </div>
+
+  <!--Lobby-->
+  <div id="lobbyScreen" class="hidden">
+      <div class="allTimeLeaderboard">
+        <h2>All-Time Leaderboard</h2>
+      <div class="leaderLabels">
+        <p>User name</p>
+        <p>Words found</p>
+      </div>
+      <div class="lobbyLeaderboards">
+        <ol type="1" class="allTimeList">
+          <li class="leaderListItem">OvenBean<span class="wordsFound">27</span></li>
+          <li class="leaderListItem">bob<span class="wordsFound">25</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="gameMenu">
+      <h2>Select a game from the list or create a new game.</h2>
+      <div class="menuActions">
+        <button class="createGame">Create Game</button>
+        <button class="joinGame" disabled>Join Game</button>
+      </div>
+      <div class="gameSelection">
+        <ul class="gameList">
+          <li class="gameListItem" tabindex="0" data-game-id="001">Match 010 <span class="players">1/4</span></li>
+          <li class="gameListItem" tabindex="0" data-game-id="002">Match 007 <span class="players">1/4</span></li>
+          <li class="gameListItem" tabindex="0" data-game-id="002">Match 007 <span class="players">1/4</span></li>
+          <li class="gameListItem" tabindex="0" data-game-id="002">Match 007 <span class="players">1/4</span></li>
+          <li class="gameListItem" tabindex="0" data-game-id="002">Match 007 <span class="players">1/4</span></li>
+          <li class="gameListItem" tabindex="0" data-game-id="002">Match 007 <span class="players">1/4</span></li>
+          <li class="gameListItem" tabindex="0" data-game-id="002">Match 007 <span class="players">1/4</span></li>
+          <li class="gameListItem" tabindex="0" data-game-id="002">Match 007 <span class="players">1/4</span></li>
+          <li class="gameListItem" tabindex="0" data-game-id="002">Match 007 <span class="players">1/4</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="concurrentLeaderboard">
+      <h2>Ongoing Games Leaderboard</h2>
+      <div class="lobbyLeaderboards">
+        <ol type="1" class="allTimeList">
+          <li class="leaderListItem">OvenBean<span class="wordsFound">27</span></li>
+          <li class="leaderListItem">bob<span class="wordsFound">25</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!--Game-->
+  <div id="gameScreen" class="">
+    <div class="leftControl">
+      <div class="topControls">
+        <button class="exitButton">Exit</button>
+        <div class="gameTimer">
+
+        </div>
+      </div>
+      <div class="gameLeaderboard">
+        <h2>Leaderboard</h2>
+        <div class="leaderLabels">
+          <p>Rank</p>
+          <p>User name</p>
+          <p>Words found</p>
+        </div>
+        <div class="leaderboard">
+          <ul class="leaderboardList">
+            <li id="redPlayer" class="player">
+              <span class="rank">1st</span>
+              <span class="username">OvenBean</span>
+              <span class="wordsFound">27</span>
+            </li>
+            <li id="bluePlayer" class="player">
+              <span class="rank">1st</span>
+              <span class="username">OvenBean</span>
+              <span class="wordsFound">27</span>
+            </li>
+            <li id="pinkPlayer" class="player">
+              <span class="rank">1st</span>
+              <span class="username">OvenBean</span>
+              <span class="wordsFound">27</span>
+            </li>
+            <li id="greenPlayer" class="player">
+              <span class="rank">1st</span>
+              <span class="username">OvenBean</span>
+              <span class="wordsFound">27</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="gameChat">
+        <ul class="messageList">
+          <li class="message"><span class="redMessage">OvenBean: </span>hiiii</li>
+          <li class="message"><span class="blueMessage">OvenBean: </span>hiiii</li>
+          <li class="message"><span class="pinkMessage">OvenBean: </span>hiiii</li>
+          <li class="message"><span class="greenMessage">OvenBean: </span>hiiii</li>
+        </ul>
+        <form class="chatForm">
+          <input type="text" class="chatInput" placeholder="Type a message..." />
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+    <div class="rightControl">
+      <div class="wordGrid">
+      </div>
+      <div class="wordBank">
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+        <p data="0">word</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="websocket.js"></script>
+  <script src="landing.js"></script>
+  <script src="lobby.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>
 

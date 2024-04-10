@@ -1,15 +1,15 @@
 package uta.cse3310;
 
 public class Player{
-	
+	public String uid;
 	public String userName;
 	public boolean ready;
 	public String color;
 	public int highscore;
 	public int currentScore;
 
-	public Player() {
-
+	public Player(String uid) {
+		this.uid = uid;
 	}
 
 	public void ready() {

@@ -197,8 +197,9 @@ private Map<String, Game> activeGames = new HashMap<String, Game>();
       case "lobby":
 	if(type.equals("createGame")){
 		String userid = message.get("uid").getAsString(); 
-		Player player = activeSessions.get(userid);
-		Game G = new Game(player);
+		Player p = activeSessions.get(userid);
+		
+		Game G = new Game(p);
 		
 		activeGames.put(G.gameId, G);
 		

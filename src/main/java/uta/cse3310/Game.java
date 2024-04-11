@@ -1,21 +1,42 @@
 package uta.cse3310;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
+
 public class Game{
 	
-	public int gameId;
+	public String gameId;
 	public boolean joinable;
 	public Grid grid;
-	public Player[] players;
+	public ArrayList<Player> players;
 	public Player[] leaderboard;
 	public ChatBox chatBox;
 	public GameClock gameClock;
 	
-	public Game(){
-
+	public Game(Player player){
+		this.gameId = generateUniqueID();
+		players.add(player);
 	}
 
 	public void startGame(){
 		
+	}
+	
+	public static String generateUniqueID() {
+   	 return UUID.randomUUID().toString();
+  	}
+	
+	public void addPlayer(Player player){
+		players.add(player);
+		System.out.println("added player");
+		return;
+	}
+	
+	public void removePlayer (Player player){
+		players.remove(player);
+		System.out.println("remove player");
+		return;
 	}
 	
 	public void endGame(){

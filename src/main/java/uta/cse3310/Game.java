@@ -18,7 +18,8 @@ public class Game{
 	
 	public Game(Player player){
 		this.gameId = generateUniqueID();
-	
+		// assign color
+		player.color = "red";
 		players.add(player);
 	}
 
@@ -32,6 +33,20 @@ public class Game{
 	
 	public void addPlayer(Player player){
 		players.add(player);
+		// assign color
+		switch (players.size()) {
+            case 2:
+              player.color = "blue";
+              break;
+          
+            case 3:
+              player.color = "pink";
+              break;
+            
+            case 4:
+              player.color = "green";
+              break;
+        }
 		System.out.println("added player");
 		return;
 	}

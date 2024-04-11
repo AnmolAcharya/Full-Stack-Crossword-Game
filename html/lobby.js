@@ -5,6 +5,8 @@ const joinGame = document.querySelector(".joinGame");
 const gameList = document.querySelector(".gameList");
 const joinableGames = document.querySelectorAll(".gameListItem");
 
+const readyPage = document.getElementById("readyScreen");
+
 let selectedGameID = null;
 
 // Create Game
@@ -47,10 +49,13 @@ joinGame.addEventListener('click', function (e) {
     connection.send(JSON.stringify(message));
 });
 
-function addGameToList(msg) {
-    playersArray = JSON.parse(msg.players)
-    firstPlayer = JSON.parse(playersArray[0]);
 
+function addGameToList(msg) {
+    let playersArray = typeof msg.players === 'string' ? JSON.parse(msg.players) : msg.players;
+    // playersArray = JSON.parse(msg.players)
+    let firstPlayer = typeof playersArray[0] === 'string' ? JSON.parse(playersArray[0]) : playersArray[0];
+    // firstPlayer = JSON.parse(playersArray[0]);
+    
     const newGame = document.createElement('li');
     newGame.classList.add('gameListItem');
     newGame.setAttribute('tabindex', '0');
@@ -59,8 +64,43 @@ function addGameToList(msg) {
 
     const playerSpan = document.createElement('span');
     playerSpan.className = 'players';
-    playerSpan.textContent = msg.numPlayer + "/4";
+    let numOfPlayers = msg.numPlayer ? msg.numPlayer : playersArray.length;
+    playerSpan.textContent = numOfPlayers + "/4";
     newGame.appendChild(playerSpan);
-
+    
     gameList.appendChild(newGame);
+
+    addPlayerToGame(firstPlayer.uid, msg.gameId);
 }
+
+function enterReadyScreen() {
+    lobbyPage.classList.add("hidden");
+    readyPage.classList.remove("hidden");
+}
+
+function addPlayerToGame(uid, gameId) {
+    if(userSession.uid == uid) {
+        userSession.gameId = gameId;
+        enterLobby();
+    }
+}
+
+function removePlayerFromGame() {
+    
+}
+
+function updateGames(msg) {
+    switch(msg.function) {
+        case "add":
+            addGameToList(msg);
+            break;
+        case "remove":
+            break;
+        case "update":
+
+            break
+    }
+}
+
+window.updateGames = updateGames;
+window.addGameToList = addGameToList;

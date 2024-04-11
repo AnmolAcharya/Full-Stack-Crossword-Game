@@ -38,12 +38,11 @@ import java.util.UUID;
 
 public class App extends WebSocketServer {
 
+  public Lobby lobby = new Lobby();
   public ArrayList<String> usernames = new ArrayList<String>();
-  private Map<String, Player> activeSessions = new HashMap<String, Player>();
-  private Map<String, Game> activeGames = new HashMap<String, Game>();
+  public Map<String, Player> activeSessions = new HashMap<String, Player>();
+  public Map<String, Game> activeGames = new HashMap<String, Game>();
   public ArrayList<String> words = new ArrayList<String>();
-
-  private Lobby lobby;
 
   public ArrayList<String> getWords() {
     String str;
@@ -87,10 +86,9 @@ public class App extends WebSocketServer {
 
     // The state of the game has changed, so lets send it to everyone
     String jsonString;
-    jsonString = gson.toJson("test Onopen");
-    handleNewConnection(conn);
+    jsonString = gson.toJson("New Server Connection");
+    handleNewConnection(conn, gson);
 
-    System.out.println(jsonString);
     broadcast(jsonString);
 
   }
@@ -156,7 +154,7 @@ public class App extends WebSocketServer {
     return UUID.randomUUID().toString();
   }
 
-  public void handleNewConnection(WebSocket conn) {
+  public void handleNewConnection(WebSocket conn, Gson gson) {
     String uid = generateUniqueID();
     Player newPlayer = new Player(uid);
     activeSessions.put(uid, newPlayer);
@@ -164,7 +162,8 @@ public class App extends WebSocketServer {
     jsonObject.addProperty("screen", "landing");
     jsonObject.addProperty("type", "newSession");
     jsonObject.addProperty("uid", uid);
-    // Send UID to the client
+    jsonObject.addProperty("lobby", gson.toJson(lobby));
+    // Send UID and lobby info to the client
     conn.send(jsonObject.toString());
   }
 
@@ -202,6 +201,7 @@ public class App extends WebSocketServer {
           Game G = new Game(p);
 
           activeGames.put(G.gameId, G);
+          lobby.updateLobby(activeGames);
 
           JsonObject jsonObject = new JsonObject();
           JsonArray jsonArray = new JsonArray();

@@ -23,6 +23,7 @@ connection.onmessage = function(event) {
           switch(msg.type) {
             case "newSession":
               window.setUserId(msg.uid);
+              window.updateLobby(msg.lobby);
               break;
             case "validateUsername":
               window.checkValidationMessage(msg.valid, msg.uid, msg.username);
@@ -32,7 +33,7 @@ connection.onmessage = function(event) {
         case "lobby":
           switch(msg.type) {
             case "updateGameList":
-              window.addGameToList(msg);
+              window.updateGames(msg);
               break;
             case "updateAllTimeLeaderboard":
 

@@ -91,6 +91,17 @@ function checkValidationMessage(valid, uid, username) {
     }
 }
 
+function updateLobby(lobby) {
+    lobbyArray = JSON.parse(lobby)
+    // joinableGamesArray = JSON.parse(lobby.joinableGames);
+    console.log(lobbyArray);
+    console.log(lobby);
+    lobbyArray.joinableGames.forEach(game => {
+        console.log(game)
+        addGameToList(game);
+    });
+}
+
 
 window.checkValidationMessage = checkValidationMessage;
 window.setUserId = setUserId;

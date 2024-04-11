@@ -11,13 +11,16 @@ public class Game{
 	public String gameId;
 	public boolean joinable;
 	public Grid grid;
-	public ArrayList<Player> players = new ArrayList<Player>();
-	public Player[] leaderboard;
+	public ArrayList<Player> players;
+	public ArrayList<Player> leaderboard;
 	public ChatBox chatBox;
 	public GameClock gameClock;
 	
 	public Game(Player player){
 		this.gameId = generateUniqueID();
+		this.players = new ArrayList<Player>();
+		this.leaderboard = new ArrayList<Player>();
+		this.joinable = true;
 		// assign color
 		player.color = "red";
 		players.add(player);

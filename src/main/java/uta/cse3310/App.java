@@ -39,9 +39,9 @@ public class App extends WebSocketServer {
 
   public ArrayList<String> usernames = new ArrayList<String>();
   private Map<String, Player> activeSessions = new HashMap<String, Player>();
-private Map<String, Game> activeGames = new HashMap<String, Game>();
+  private Map<String, Game> activeGames = new HashMap<String, Game>();
   public ArrayList<String> words = new ArrayList<String>();
-  
+
   private Lobby lobby;
 
   public ArrayList<String> getWords() {
@@ -188,85 +188,81 @@ private Map<String, Game> activeGames = new HashMap<String, Game>();
           jsonObject.addProperty("type", "validateUsername");
           String uid = message.get("uid").getAsString();
           jsonObject.addProperty("valid", validateUsername(username, uid));
-          
+
           System.out.println(jsonObject.toString());
           broadcast(jsonObject.toString());
 
         }
         break;
       case "lobby":
-	if(type.equals("createGame")){
-		String userid = message.get("uid").getAsString(); 
-		Player player = activeSessions.get(userid);
-		Game G = new Game(player);
-		
-		activeGames.put(G.gameId, G);
-		
-		
-		JsonObject jsonObject = new JsonObject();
-		
-		jsonObject.addProperty("screen", "lobby");
-          	jsonObject.addProperty("type", "updateGameList");
-          	jsonObject.addProperty("function", "add");
-          	jsonObject.addProperty("gameId", G.gameId);
-          	jsonObject.addProperty("numPlayer",G.players.size());
-          	
-          	System.out.println(jsonObject.toString());
-        	broadcast(jsonObject.toString());
-        	
-        } else if(type.equals("joinGame")){
-		String userid = message.get("uid").getAsString();
-		String gameId = message.get("gameId").getAsString();
-		Player player = activeSessions.get(userid);
-		Game G = activeGames.get(gameId);
-		
-		
-		G.addPlayer(player);
-		
-		JsonObject jsonObject = new JsonObject();
-		
-		jsonObject.addProperty("screen", "lobby");
-          	jsonObject.addProperty("type", "updateGameList");
-          	jsonObject.addProperty("function", "update");
-          	jsonObject.addProperty("gameId", G.gameId);
-          	jsonObject.addProperty("numPlayer",G.players.size());
-          	
-          	System.out.println(jsonObject.toString());
-        	broadcast(jsonObject.toString());
-	} else if(type.equals("leaveGame")){
-		String userid = message.get("uid").getAsString();
-		String gameId = message.get("gameId").getAsString();
-		Player player = activeSessions.get(userid);
-		Game G = activeGames.get(gameId);
-		
-		G.removePlayer(player);
-		
-		JsonObject jsonObject = new JsonObject();
-		jsonObject.addProperty("screen", "lobby");
-          	jsonObject.addProperty("type", "updateGameList");          	
-          	
-          	if(G.players.size() == 0){
-          		jsonObject.addProperty("function", "remove");
-          		jsonObject.addProperty("gameId",G.gameId);
-          		jsonObject.addProperty("numPlayer",G.players.size());
-          		
-          		activeGames.remove(G.gameId);
-          		G = null;
-          	
-          	} else {
-          		jsonObject.addProperty("function", "update");
-          		jsonObject.addProperty("gameId", G.gameId);
-          		jsonObject.addProperty("numPlayer",G.players.size());
-          	
-          	
-          	}
-          	System.out.println(jsonObject.toString());
-        	broadcast(jsonObject.toString());	
-	
-	}
-	
-	
-	break;
+        if (type.equals("createGame")) {
+          String uid = message.get("uid").getAsString();
+          Player player = activeSessions.get(uid);
+          Game G = new Game(player);
+
+          activeGames.put(G.gameId, G);
+
+          JsonObject jsonObject = new JsonObject();
+
+          jsonObject.addProperty("screen", "lobby");
+          jsonObject.addProperty("type", "updateGameList");
+          jsonObject.addProperty("function", "add");
+          jsonObject.addProperty("gameId", G.gameId);
+          jsonObject.addProperty("numPlayer", G.players.size());
+
+          System.out.println(jsonObject.toString());
+          broadcast(jsonObject.toString());
+
+        } else if (type.equals("joinGame")) {
+          String userid = message.get("uid").getAsString();
+          String gameId = message.get("gameId").getAsString();
+          Player player = activeSessions.get(userid);
+          Game G = activeGames.get(gameId);
+
+          G.addPlayer(player);
+
+          JsonObject jsonObject = new JsonObject();
+
+          jsonObject.addProperty("screen", "lobby");
+          jsonObject.addProperty("type", "updateGameList");
+          jsonObject.addProperty("function", "update");
+          jsonObject.addProperty("gameId", G.gameId);
+          jsonObject.addProperty("numPlayer", G.players.size());
+
+          System.out.println(jsonObject.toString());
+          broadcast(jsonObject.toString());
+        } else if (type.equals("leaveGame")) {
+          String userid = message.get("uid").getAsString();
+          String gameId = message.get("gameId").getAsString();
+          Player player = activeSessions.get(userid);
+          Game G = activeGames.get(gameId);
+
+          G.removePlayer(player);
+
+          JsonObject jsonObject = new JsonObject();
+          jsonObject.addProperty("screen", "lobby");
+          jsonObject.addProperty("type", "updateGameList");
+
+          if (G.players.size() == 0) {
+            jsonObject.addProperty("function", "remove");
+            jsonObject.addProperty("gameId", G.gameId);
+            jsonObject.addProperty("numPlayer", G.players.size());
+
+            activeGames.remove(G.gameId);
+            G = null;
+
+          } else {
+            jsonObject.addProperty("function", "update");
+            jsonObject.addProperty("gameId", G.gameId);
+            jsonObject.addProperty("numPlayer", G.players.size());
+
+          }
+          System.out.println(jsonObject.toString());
+          broadcast(jsonObject.toString());
+
+        }
+
+        break;
       case "game":
 
         break;
@@ -275,7 +271,7 @@ private Map<String, Game> activeGames = new HashMap<String, Game>();
 
   public boolean validateUsername(String username, String uid) {
     if (usernames.contains(username) || username == null)
-	return false;
+      return false;
 
     Player player = activeSessions.get(uid);
     player.userName = username;

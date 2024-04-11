@@ -6,14 +6,13 @@ const lobbyPage = document.getElementById("lobbyScreen");
 const errorMessage = document.querySelector(".errorMessage");
 
 usernameInput.addEventListener('input', () => {
-    if(usernameInput.value.trim() !== '') {
+    if (usernameInput.value.trim() !== '') {
         usernameSubmit.disabled = false;
         defaultForm();
     } else {
         usernameSubmit.disabled = true;
     }
 });
-
 
 // Validate username on 'Enter'
 usernameInput.addEventListener('keypress', function (e) {
@@ -47,15 +46,15 @@ function validateUsername() {
     usernameInput.value = '';
 }
 
-function enterLobby() {
-    landingPage.classList.add("hidden");
-    lobbyPage.classList.remove("hidden");
-}
-
 function invalidUsername() {
     errorMessage.style.display = "block";
     usernameInput.style.backgroundColor = "#FFB7B7";
     usernameInput.style.marginTop = "0";
+}
+
+function enterLobby() {
+    landingPage.classList.add("hidden");
+    lobbyPage.classList.remove("hidden");
 }
 
 function defaultForm() {
@@ -64,5 +63,36 @@ function defaultForm() {
     errorMessage.style.display = "none";
 }
 
+function setUserId(uid) {
+    // only set user id if it is null
+    if (userSession.uid == null) {
+        userSession.uid = uid;
+    }
+}
+
+function setUserName(uid, username) {
+    // continue if uid matches
+    if (userSession.uid == uid) {
+        // only set user name if it is null
+        if (userSession.username == null) {
+            userSession.username = username
+        }
+    }
+}
+
+function checkValidationMessage(valid, uid, username) {
+    if (userSession.uid == uid) {
+        if (valid == true) {
+            setUserName(uid, username);
+            enterLobby();
+        } else {
+            invalidUsername();
+        }
+    }
+}
+
+
+window.checkValidationMessage = checkValidationMessage;
+window.setUserId = setUserId;
 window.enterLobby = enterLobby;
 window.invalidUsername = invalidUsername;

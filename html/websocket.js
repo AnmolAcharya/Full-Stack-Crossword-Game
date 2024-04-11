@@ -22,15 +22,10 @@ connection.onmessage = function(event) {
         case "landing":
           switch(msg.type) {
             case "newSession":
-              userSession.uid = msg.uid;
+              window.setUserId(msg.uid);
               break;
             case "validateUsername":
-              if(msg.valid == true) {
-                userSession.username = msg.username
-                window.enterLobby();
-              } else {
-                window.invalidUsername();
-              }
+              window.checkValidationMessage(msg.valid, msg.uid, msg.username);
               break
           }
           break;

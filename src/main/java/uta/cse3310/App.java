@@ -118,7 +118,7 @@ public class App extends WebSocketServer {
     // A UserEvent is all that is allowed at this point
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.create();
-    handleMessage(gson, message);
+    handleMessage(gson, message, conn);
     // UserEvent U = gson.fromJson(message, UserEvent.class);
     // System.out.println(U.Button);
 
@@ -126,12 +126,9 @@ public class App extends WebSocketServer {
     // Game G = conn.getAttachment();
     // G.Update(U);
 
-    // send out the game state every time
-    // to everyone
+    // Confirm message recieved
     String jsonString;
     jsonString = gson.toJson("Server recieved message");
-
-    System.out.println(jsonString);
     broadcast(jsonString);
   }
 
@@ -159,7 +156,7 @@ public class App extends WebSocketServer {
     return UUID.randomUUID().toString();
   }
 
-  public void handleNewConnection(WebSocket socket) {
+  public void handleNewConnection(WebSocket conn) {
     String uid = generateUniqueID();
     Player newPlayer = new Player(uid);
     activeSessions.put(uid, newPlayer);
@@ -168,10 +165,10 @@ public class App extends WebSocketServer {
     jsonObject.addProperty("type", "newSession");
     jsonObject.addProperty("uid", uid);
     // Send UID to the client
-    broadcast(jsonObject.toString());
+    conn.send(jsonObject.toString());
   }
 
-  public void handleMessage(Gson gson, String jsonMessage) {
+  public void handleMessage(Gson gson, String jsonMessage, WebSocket conn) {
     JsonElement element = JsonParser.parseString(jsonMessage);
     JsonObject message = element.getAsJsonObject();
 
@@ -183,15 +180,18 @@ public class App extends WebSocketServer {
       case "landing":
         // validate username
         String username = message.get("username").getAsString();
+        String uid = message.get("uid").getAsString();
         if (type.equals("validateUsername")) {
+          // create JSON object
           JsonObject jsonObject = new JsonObject();
           jsonObject.addProperty("screen", "landing");
           jsonObject.addProperty("type", "validateUsername");
-          String uid = message.get("uid").getAsString();
+          jsonObject.addProperty("uid", uid);
+          jsonObject.addProperty("username", username);
           jsonObject.addProperty("valid", validateUsername(username, uid));
 
-          System.out.println(jsonObject.toString());
-          broadcast(jsonObject.toString());
+          // send validation status to requesting client
+          conn.send(jsonObject.toString());
 
         }
         break;

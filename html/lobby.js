@@ -18,8 +18,6 @@ createGame.addEventListener('click', function (e) {
     connection.send(JSON.stringify(message));
 });
 
-
-
 // Select Game
 let previousSelection;
 joinableGames.forEach(function (game) {

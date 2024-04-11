@@ -35,6 +35,17 @@ connection.onmessage = function(event) {
           }
           break;
         case "lobby":
+          switch(msg.type) {
+            case "updateGameList":
+              window.addGameToList(msg);
+              break;
+            case "updateAllTimeLeaderboard":
+
+              break;
+            case "updateConcurrentLeaderboard":
+
+              break;
+          }
           break;
         case "game":
           break;

@@ -22,10 +22,10 @@ createGame.addEventListener('click', function (e) {
 
 // Select Game
 let previousSelection;
-joinableGames.forEach(function(game) {
+joinableGames.forEach(function (game) {
     game.addEventListener('click', function (e) {
         // Remove previous game selections
-        if(previousSelection) {
+        if (previousSelection) {
             previousSelection.classList.remove("gameSelected");
         }
         // New Selection
@@ -48,3 +48,21 @@ joinGame.addEventListener('click', function (e) {
 
     connection.send(JSON.stringify(message));
 });
+
+function addGameToList(msg) {
+    playersArray = JSON.parse(msg.players)
+    firstPlayer = JSON.parse(playersArray[0]);
+
+    const newGame = document.createElement('li');
+    newGame.classList.add('gameListItem');
+    newGame.setAttribute('tabindex', '0');
+    newGame.setAttribute('data-game-id', msg.gameId);
+    newGame.textContent = firstPlayer.userName + "'s Match";
+
+    const playerSpan = document.createElement('span');
+    playerSpan.className = 'players';
+    playerSpan.textContent = msg.numPlayer + "/4";
+    newGame.appendChild(playerSpan);
+
+    gameList.appendChild(newGame);
+}

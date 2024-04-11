@@ -1,5 +1,8 @@
 const usernameInput = document.querySelector(".usernameInput");
 const usernameSubmit = document.querySelector(".usernameSubmit");
+const usernameForm = document.querySelector(".usernameForm");
+const landingPage = document.getElementById("landingScreen");
+const lobbyPage = document.getElementById("lobbyScreen");
 
 usernameInput.addEventListener('input', () => {
     if(usernameInput.value.trim() !== '') {
@@ -11,26 +14,36 @@ usernameInput.addEventListener('input', () => {
 
 
 // Validate username on 'Enter'
-chatInput.addEventListener('keypress', function (e) {
+usernameInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         e.preventDefault();
-        sendMessage();
+        validateUsername();
     }
 });
 
 // Validate username on 'Start' click
-chatForm.addEventListener('submit', function (e) {
+usernameForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    sendMessage();
+    validateUsername();
 });
 
 
 function validateUsername() {
-    const username = usernameInput.value.trim();
+    // Get username value
+    const username = usernameInput.value;
     let message = {
+        screen: "landing",
         type: "validateUsername",
-        // uid: userSession.uid,
+        uid: userSession.uid,
         username: username
     };
-    socket.send(JSON.stringify(message));
+    connection.send(JSON.stringify(message));
+
+    // Clear username field
+    usernameInput.value = '';
+}
+
+function enterLobby() {
+    landingPage.classList.add("hidden");
+    lobbyPage.classList.remove("hidden");
 }

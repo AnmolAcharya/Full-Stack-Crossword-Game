@@ -18,15 +18,24 @@ connection.onmessage = function(event) {
     let msg = JSON.parse(event.data);
     console.log("Message Received: ", msg);
 
-    switch(message.type) {
-        case "validateUsername":
-          // handle validation response
+    switch(msg.screen) {
+        case "landing":
+          switch(msg.type) {
+            case "newSession":
+              userSession.uid = msg.uid;
+              console.log("test", userSession.uid);
+              break;
+            case "validateUsername":
+              if(msg.valid == true) {
+                userSession.username = msg.username
+
+              }
+              break
+          }
           break;
-        case "updateLeaderboard":
-          // update leaderboard UI
+        case "lobby":
           break;
-        case "chatMessage":
-          // display chat message
+        case "game":
           break;
       }
   };

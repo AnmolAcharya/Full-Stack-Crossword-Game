@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -203,10 +204,13 @@ public class App extends WebSocketServer {
           activeGames.put(G.gameId, G);
 
           JsonObject jsonObject = new JsonObject();
+          JsonArray jsonArray = new JsonArray();
 
           jsonObject.addProperty("screen", "lobby");
           jsonObject.addProperty("type", "updateGameList");
           jsonObject.addProperty("function", "add");
+          jsonArray.add(gson.toJson(p));
+          jsonObject.addProperty("players", gson.toJson(jsonArray));
           jsonObject.addProperty("gameId", G.gameId);
           jsonObject.addProperty("numPlayer", G.players.size());
 
@@ -222,10 +226,16 @@ public class App extends WebSocketServer {
           G.addPlayer(player);
 
           JsonObject jsonObject = new JsonObject();
+          JsonArray jsonArray = new JsonArray();
 
           jsonObject.addProperty("screen", "lobby");
           jsonObject.addProperty("type", "updateGameList");
           jsonObject.addProperty("function", "update");
+          for(int i=0; i<G.players.size(); i++) {
+            String jsonPlayer = gson.toJson(player);
+            jsonArray.add(jsonPlayer);
+          }
+          jsonObject.addProperty("players", gson.toJson(jsonArray));
           jsonObject.addProperty("gameId", G.gameId);
           jsonObject.addProperty("numPlayer", G.players.size());
 

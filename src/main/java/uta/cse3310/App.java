@@ -12,7 +12,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.HashMap;
 
+import java.util.LinkedHashMap;
 import org.java_websocket.WebSocket;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_6455;
@@ -33,8 +35,8 @@ import java.util.UUID;
 
 public class App extends WebSocketServer {
 
-  // public ArrayList<Player> players = new ArrayList<Player>();
-  private ArrayList<Player> activeSessions = new ArrayList<Player>();
+  public ArrayList<Player> players = new ArrayList<Player>();
+  private Map<String, Player> activeSessions = new HashMap<String, Player>();
 
   public ArrayList<String> words = new ArrayList<String>();
 
@@ -155,7 +157,7 @@ public class App extends WebSocketServer {
   public void handleNewConnection(WebSocket socket) {
     String uid = generateUniqueID();
     Player newPlayer = new Player(uid);
-    activeSessions.add(newPlayer);
+    activeSessions.put(uid, newPlayer);
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("screen", "landing");
     jsonObject.addProperty("type", "newSession");
@@ -176,8 +178,24 @@ public class App extends WebSocketServer {
         // validate username
         String username = message.get("username").getAsString();
         if (type.equals("validateUsername")) {
-          System.out.println("test validate");
-          validateUsername(username);
+          //System.out.println("test validate");
+          JsonObject jsonObject = new JsonObject();
+          jsonObject.addProperty("screen", "landing");
+     	  jsonObject.addProperty("type", "validateUsername");
+          if(validateUsername(username) == true){
+          	Player player = activeSessions.get(message.get("uid").getAsString()); 
+          	player.userName = username;
+          	players.add(player);
+          	
+          	jsonObject.addProperty("valid", true);
+		
+          } else {
+          
+     		jsonObject.addProperty("valid", false);
+	  }
+		System.out.println(jsonObject.toString());
+		broadcast(jsonObject.toString());
+          
         }
         break;
       case "lobby":
@@ -190,9 +208,15 @@ public class App extends WebSocketServer {
   }
 
   public boolean validateUsername(String username) {
-    System.out.println("Username: " + username);
-    return false;
-  }
+    System.out.println("Username:" + username); //prints username
+   
+    for(Player player: players){ 
+        if(username.equals(player.userName)) return false;
+    }
+    
+    return true;
+}
+
 
   public static void main(String[] args) {
     // Set up the http server

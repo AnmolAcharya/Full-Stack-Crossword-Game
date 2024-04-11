@@ -195,74 +195,79 @@ public class App extends WebSocketServer {
         }
         break;
       case "lobby":
-        if (type.equals("createGame")) {
-          String uid = message.get("uid").getAsString();
-          Player player = activeSessions.get(uid);
-          Game G = new Game(player);
-
-          activeGames.put(G.gameId, G);
-
-          JsonObject jsonObject = new JsonObject();
-
-          jsonObject.addProperty("screen", "lobby");
-          jsonObject.addProperty("type", "updateGameList");
-          jsonObject.addProperty("function", "add");
-          jsonObject.addProperty("gameId", G.gameId);
-          jsonObject.addProperty("numPlayer", G.players.size());
-
-          System.out.println(jsonObject.toString());
-          broadcast(jsonObject.toString());
-
-        } else if (type.equals("joinGame")) {
-          String userid = message.get("uid").getAsString();
-          String gameId = message.get("gameId").getAsString();
-          Player player = activeSessions.get(userid);
-          Game G = activeGames.get(gameId);
-
-          G.addPlayer(player);
-
-          JsonObject jsonObject = new JsonObject();
-
-          jsonObject.addProperty("screen", "lobby");
-          jsonObject.addProperty("type", "updateGameList");
-          jsonObject.addProperty("function", "update");
-          jsonObject.addProperty("gameId", G.gameId);
-          jsonObject.addProperty("numPlayer", G.players.size());
-
-          System.out.println(jsonObject.toString());
-          broadcast(jsonObject.toString());
-        } else if (type.equals("leaveGame")) {
-          String userid = message.get("uid").getAsString();
-          String gameId = message.get("gameId").getAsString();
-          Player player = activeSessions.get(userid);
-          Game G = activeGames.get(gameId);
-
-          G.removePlayer(player);
-
-          JsonObject jsonObject = new JsonObject();
-          jsonObject.addProperty("screen", "lobby");
-          jsonObject.addProperty("type", "updateGameList");
-
-          if (G.players.size() == 0) {
-            jsonObject.addProperty("function", "remove");
-            jsonObject.addProperty("gameId", G.gameId);
-            jsonObject.addProperty("numPlayer", G.players.size());
-
-            activeGames.remove(G.gameId);
-            G = null;
-
-          } else {
-            jsonObject.addProperty("function", "update");
-            jsonObject.addProperty("gameId", G.gameId);
-            jsonObject.addProperty("numPlayer", G.players.size());
-
-          }
-          System.out.println(jsonObject.toString());
-          broadcast(jsonObject.toString());
-
-        }
-
-        break;
+	if(type.equals("createGame")){
+		String userid = message.get("uid").getAsString(); 
+		Player p = activeSessions.get(userid);
+		
+		Game G = new Game(p);
+		
+		activeGames.put(G.gameId, G);
+		
+		
+		JsonObject jsonObject = new JsonObject();
+		
+		jsonObject.addProperty("screen", "lobby");
+          	jsonObject.addProperty("type", "updateGameList");
+          	jsonObject.addProperty("function", "add");
+          	jsonObject.addProperty("gameId", G.gameId);
+          	jsonObject.addProperty("numPlayer",G.players.size());
+          	
+          	System.out.println(jsonObject.toString());
+        	broadcast(jsonObject.toString());
+        	
+        } else if(type.equals("joinGame")){
+		String userid = message.get("uid").getAsString();
+		String gameId = message.get("gameId").getAsString();
+		Player player = activeSessions.get(userid);
+		Game G = activeGames.get(gameId);
+		
+		
+		G.addPlayer(player);
+		
+		JsonObject jsonObject = new JsonObject();
+		
+		jsonObject.addProperty("screen", "lobby");
+          	jsonObject.addProperty("type", "updateGameList");
+          	jsonObject.addProperty("function", "update");
+          	jsonObject.addProperty("gameId", G.gameId);
+          	jsonObject.addProperty("numPlayer",G.players.size());
+          	
+          	System.out.println(jsonObject.toString());
+        	broadcast(jsonObject.toString());
+	} else if(type.equals("leaveGame")){
+		String userid = message.get("uid").getAsString();
+		String gameId = message.get("gameId").getAsString();
+		Player player = activeSessions.get(userid);
+		Game G = activeGames.get(gameId);
+		
+		G.removePlayer(player);
+		
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("screen", "lobby");
+          	jsonObject.addProperty("type", "updateGameList");          	
+          	
+          	if(G.players.size() == 0){
+          		jsonObject.addProperty("function", "remove");
+          		jsonObject.addProperty("gameId",G.gameId);
+          		jsonObject.addProperty("numPlayer",G.players.size());
+          		
+          		activeGames.remove(G.gameId);
+          		G = null;
+          	
+          	} else {
+          		jsonObject.addProperty("function", "update");
+          		jsonObject.addProperty("gameId", G.gameId);
+          		jsonObject.addProperty("numPlayer",G.players.size());
+          	
+          	
+          	}
+          	System.out.println(jsonObject.toString());
+        	broadcast(jsonObject.toString());	
+	
+	}
+	
+	
+	break;
       case "game":
 
         break;

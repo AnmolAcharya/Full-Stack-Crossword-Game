@@ -20,6 +20,7 @@ public class Game{
 		this.gameId = generateUniqueID();
 		this.players = new ArrayList<Player>();
 		this.leaderboard = new ArrayList<Player>();
+		this.gameClock = new GameClock();
 		this.joinable = true;
 		// assign color
 		player.color = "red";
@@ -27,7 +28,7 @@ public class Game{
 	}
 
 	public void startGame(){
-		
+		gameClock.startTimer();
 	}
 	
 	public static String generateUniqueID() {

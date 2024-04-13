@@ -21,6 +21,7 @@ public class Game{
 		this.players = new ArrayList<Player>();
 		this.leaderboard = new ArrayList<Player>();
 		this.gameClock = new GameClock();
+		this.chatBox = new ChatBox();
 		this.joinable = true;
 		// assign color
 		player.color = "red";
@@ -39,17 +40,17 @@ public class Game{
 		players.add(player);
 		// assign color
 		switch (players.size()) {
-            case 2:
-              player.color = "blue";
-              break;
-          
-            case 3:
-              player.color = "pink";
-              break;
-            
-            case 4:
-              player.color = "green";
-              break;
+        	    case 2:
+        	      player.color = "blue";
+        	      break;
+        	  
+        	    case 3:
+        	      player.color = "pink";
+        	      break;
+        	    
+        	    case 4:
+        	      player.color = "green";
+        	      break;
         }
 		System.out.println("added player");
 		return;
@@ -75,6 +76,11 @@ public class Game{
 	
 	public Player removePlayer(){
 		return null;
+	}
+	
+	public void addMessage(String userName, String text){
+		chatBox.sendMessage(userName, text);
+		
 	}
 	
 }

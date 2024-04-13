@@ -44,6 +44,7 @@ public class App extends WebSocketServer {
   public Map<String, Game> activeGames = new HashMap<String, Game>();
   public ArrayList<String> words = new ArrayList<String>();
 
+  public String id = null;
   public ArrayList<String> getWords() {
     String str;
     try {
@@ -96,6 +97,14 @@ public class App extends WebSocketServer {
   @Override
   public void onClose(WebSocket conn, int code, String reason, boolean remote) {
     System.out.println(conn + " has closed");
+    Player P = activeSessions.get(id);
+    activeSessions.remove(id); //removed player 
+   
+    String a = P.userName;
+    usernames.remove(a);
+    
+    System.out.println(a + " removed"); // removed username from list
+    
     // Retrieve the game tied to the websocket connection
     Game G = conn.getAttachment();
     G = null;
@@ -104,7 +113,7 @@ public class App extends WebSocketServer {
     // send out the game state every time
     // to everyone
     String jsonString;
-    jsonString = gson.toJson(G);
+    jsonString = gson.toJson("Server is closed" + G);
     broadcast(jsonString);
   }
 
@@ -156,6 +165,7 @@ public class App extends WebSocketServer {
 
   public void handleNewConnection(WebSocket conn, Gson gson) {
     String uid = generateUniqueID();
+    id = uid;
     Player newPlayer = new Player(uid);
     activeSessions.put(uid, newPlayer);
     JsonObject jsonObject = new JsonObject();
@@ -232,7 +242,7 @@ public class App extends WebSocketServer {
           jsonObject.addProperty("type", "updateGameList");
           jsonObject.addProperty("function", "update");
           for(int i=0; i<G.players.size(); i++) {
-            String jsonPlayer = gson.toJson(player);
+            String jsonPlayer = gson.toJson(G.players.get(i));
             jsonArray.add(jsonPlayer);
           }
           jsonObject.addProperty("players", gson.toJson(jsonArray));
@@ -274,7 +284,25 @@ public class App extends WebSocketServer {
 
         break;
       case "game":
-
+      	if (type.equals("chatRoom")){ 
+      		String userid = message.get("uid").getAsString();
+      		String gameId = message.get("gameId").getAsString();
+      		String text = message.get("message").getAsString();
+			Player p = activeSessions.get(userid);
+			String userName = p.userName;
+			
+		    JsonObject jsonObject = new JsonObject();
+		    jsonObject.addProperty("screen", "game");
+		    jsonObject.addProperty("type", "chatRoom");	
+		    jsonObject.addProperty("gameId", gameId);
+		    jsonObject.addProperty("userName", userName);
+		    jsonObject.addProperty("textToAdd", text);  
+		    
+		    System.out.println(jsonObject.toString());
+            broadcast(jsonObject.toString());    		
+      			
+      	
+	}
         break;
     }
   }

@@ -13,7 +13,6 @@ public class Game{
 	public Grid grid;
 	public ArrayList<Player> players;
 	public ArrayList<Player> leaderboard;
-	public ChatBox chatBox;
 	public GameClock gameClock;
 	
 	public Game(Player player){
@@ -21,7 +20,6 @@ public class Game{
 		this.players = new ArrayList<Player>();
 		this.leaderboard = new ArrayList<Player>();
 		this.gameClock = new GameClock();
-		this.chatBox = new ChatBox();
 		this.joinable = true;
 		// assign color
 		player.color = "red";
@@ -78,9 +76,6 @@ public class Game{
 		return null;
 	}
 	
-	public void addMessage(String userName, String text){
-		chatBox.sendMessage(userName, text);
-		
-	}
+	
 	
 }

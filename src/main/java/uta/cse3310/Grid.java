@@ -1,16 +1,46 @@
 package uta.cse3310;
 import java.lang.Math;
 import java.util.*;
-import java.util.Random;
 
 public class Grid{
 	
+
+    /*
+     * Hi! Welcome to the Grid class. This is where all
+     * of the functionality required to run the game lies.
+     * Here's a little primer on how to use objects from this class!
+     * 
+     * validateSelection(Letter first, Letter last) is a method that
+     * takes in 2 letters and returns whether or not the word between those
+     * 2 letters is A) a valid selection and B) a word inside the word bank.
+     * Returns a boolean true or false.
+     * 
+     * gimmeAHint() is a method that returns a random starting letter of a word
+     * currently found in the grid. Use it to generate hints for users.
+     * Returns a Letter.
+     * 
+     * generateWordBank(ArrayList<String> possibleWords) is a method that creates the word bank
+     * for a given word grid. Send in a large list of possible words so that it can generate 
+     * a word bank for you.
+     * Returns a HashMap<String, Boolean> wordBank.
+     * 
+     * fillGrid(HashMap<String, Boolean> wordBank) is a method that generates a word search grid
+     * for use in a game. Feed it a wordBank (typically its own word bank) and it will give you
+     * a grid of specified density for use in a game.
+     * Returns a Letter[20][20] grid
+     * 
+     * Some important non-method members of the Grid class:
+     * wordBank: HashMap<String, Boolean>
+     * grid: Letter[20][20]
+     */
 	public Letter[][] grid = new Letter[20][20];
-	public ArrayList<String> wordBank;
+	public HashMap<String, Boolean> wordBank;
 	public double density = .7;
     public String[] directions = {"N","S","E","W","NW","SW","NE","SE"};
+    public ArrayList<Letter> hints;
 	public Grid(){
-        wordBank = new ArrayList<String>();
+        wordBank = new HashMap<String,Boolean>();
+        hints = new ArrayList<Letter>();
         for(int i = 0; i < 20; i++){
             for(int j = 0; j < 20; j++){
                 Letter l = new Letter(' ',0,0);
@@ -40,41 +70,47 @@ public class Grid{
     public boolean checkWord(Letter first, Letter last, String direction){
         float d;
         int i;
-        int j;
         StringBuilder sb = new StringBuilder();
+        String ws = new String();
         switch(direction){
             case "horizontal":
                 if(first.coordinate[0] > last.coordinate[0]){
                     d = first.coordinate[0]-last.coordinate[0];
                     for(i = 0; i <= d; i++)
                         sb.append(this.grid[(int)first.coordinate[0]-i][(int)first.coordinate[1]].letter);
-                    String ws = sb.toString();
+                    ws = sb.toString();
                     sb.delete(0,sb.length());
-                    if(!this.wordBank.contains(ws)){
+                    if(!this.wordBank.containsKey(ws)){
                         for(i = 0; i <= d; i++)
                             sb.append(this.grid[(int)last.coordinate[0]+i][(int)last.coordinate[1]].letter);
                         ws = sb.toString();
-                        if(!this.wordBank.contains(ws))
+                        if(!this.wordBank.containsKey(ws))
                             return false;
                     }
-                    else
+                    else{
+                        if(!hints.remove(first)) hints.remove(last);
+                        this.wordBank.put(ws,true);
                         return true;
+                    }
                 }
                 else if(last.coordinate[0] > first.coordinate[0]){
                     d = last.coordinate[0] - first.coordinate[0];
                     for(i = 0; i <= d; i++)
                         sb.append(this.grid[(int)first.coordinate[0]+i][(int)first.coordinate[1]].letter);
-                    String ws = sb.toString();
+                    ws = sb.toString();
                     sb.delete(0,sb.length());
-                    if(!this.wordBank.contains(ws)){
+                    if(!this.wordBank.containsKey(ws)){
                         for(i = 0; i <= d; i++)
                             sb.append(this.grid[(int)last.coordinate[0]-i][(int)last.coordinate[1]].letter);
                         ws = sb.toString();
-                        if(!this.wordBank.contains(ws))
+                        if(!this.wordBank.containsKey(ws))
                             return false;
                     }
-                    else 
+                    else{
+                        if(!hints.remove(first)) hints.remove(last);
+                        this.wordBank.put(ws,true);
                         return true;
+                    }
                 }
             break;
             case "vertical":
@@ -83,33 +119,39 @@ public class Grid{
                     for(i = 0; i <= d; i++){
                         sb.append(this.grid[(int)first.coordinate[0]][(int)first.coordinate[1]-i].letter);
                     }
-                    String ws = sb.toString();
+                    ws = sb.toString();
                     sb.delete(0,sb.length());
-                    if(!this.wordBank.contains(ws)){
+                    if(!this.wordBank.containsKey(ws)){
                         for(i = 0; i <= d; i++)
                             sb.append(this.grid[(int)last.coordinate[0]][(int)last.coordinate[1]+i].letter);
                         ws = sb.toString();
-                        if(!this.wordBank.contains(ws))
+                        if(!this.wordBank.containsKey(ws))
                             return false;
                     }
-                    else
+                    else{
+                        if(!hints.remove(first)) hints.remove(last);
+                        this.wordBank.put(ws,true);
                         return true;
+                    }
                 }
                 else if(last.coordinate[1] > first.coordinate[1]){
                     d = last.coordinate[1] - first.coordinate[1];
                     for(i = 0; i <= d; i++)
                         sb.append(this.grid[(int)first.coordinate[0]][(int)first.coordinate[1]+i].letter);
-                    String ws = sb.toString();
+                    ws = sb.toString();
                     sb.delete(0,sb.length());
-                    if(!this.wordBank.contains(ws)){
+                    if(!this.wordBank.containsKey(ws)){
                         for(i = 0; i <= d; i++)
                             sb.append(this.grid[(int)last.coordinate[0]][(int)last.coordinate[1]-i].letter);
                         ws = sb.toString();
-                        if(!this.wordBank.contains(ws))
+                        if(!this.wordBank.containsKey(ws))
                             return false;
                     }
-                    else 
+                    else{
+                        if(!hints.remove(first)) hints.remove(last);
+                        this.wordBank.put(ws,true);
                         return true;
+                    }
                 }
             break;
             case "diagonal":
@@ -118,13 +160,13 @@ public class Grid{
                         for(i = 0; i <=((int)first.coordinate[1]-(int)last.coordinate[1]); i++){
                             sb.append(this.grid[(int)first.coordinate[0]-i][(int)first.coordinate[1]-i].letter);
                         }
-                        String ws = sb.toString();
+                        ws = sb.toString();
                         sb.delete(0,sb.length());
-                        if(!this.wordBank.contains(ws)){
+                        if(!this.wordBank.containsKey(ws)){
                             for(i = 0; i <= ((int)first.coordinate[1]-(int)last.coordinate[1]); i++)
                                 sb.append(this.grid[(int)last.coordinate[0]+i][(int)last.coordinate[1]+i].letter);
                             ws = sb.toString();
-                            if(!this.wordBank.contains(ws)) 
+                            if(!this.wordBank.containsKey(ws)) 
                                 return false;
                         }
                     }
@@ -132,13 +174,13 @@ public class Grid{
                         for(i = 0; i <=((int)first.coordinate[1]-(int)last.coordinate[1]); i++){
                             sb.append(this.grid[(int)first.coordinate[0]+i][(int)first.coordinate[1]-i].letter);
                         }
-                        String ws = sb.toString();
+                        ws = sb.toString();
                         sb.delete(0,sb.length());
-                        if(!this.wordBank.contains(ws)){
+                        if(!this.wordBank.containsKey(ws)){
                             for(i = 0; i <= ((int)first.coordinate[1]-(int)last.coordinate[1]); i++)
                                 sb.append(this.grid[(int)last.coordinate[0]-i][(int)last.coordinate[1]+i].letter);
                             ws = sb.toString();
-                            if(!this.wordBank.contains(ws)) 
+                            if(!this.wordBank.containsKey(ws)) 
                                 return false;
                         }
                     }
@@ -148,13 +190,13 @@ public class Grid{
                         for(i = 0; i <=((int)last.coordinate[1]-(int)first.coordinate[1]); i++){
                             sb.append(this.grid[(int)last.coordinate[0]+i][(int)last.coordinate[1]-i].letter);
                         }
-                        String ws = sb.toString();
+                        ws = sb.toString();
                         sb.delete(0,sb.length());
-                        if(!this.wordBank.contains(ws)){
+                        if(!this.wordBank.containsKey(ws)){
                             for(i = 0; i <= ((int)last.coordinate[1]-(int)first.coordinate[1]); i++)
                                 sb.append(this.grid[(int)first.coordinate[0]-i][(int)first.coordinate[1]+i].letter);
                             ws = sb.toString();
-                            if(!this.wordBank.contains(ws)) 
+                            if(!this.wordBank.containsKey(ws)) 
                                 return false;
                         }
                     }
@@ -162,21 +204,21 @@ public class Grid{
                         for(i = 0; i <=((int)last.coordinate[1]-(int)first.coordinate[1]); i++){
                             sb.append(this.grid[(int)last.coordinate[0]-i][(int)last.coordinate[1]-i].letter);
                         }
-                        String ws = sb.toString();
-                        System.out.println(ws);
+                        ws = sb.toString();
                         sb.delete(0,sb.length());
-                        if(!this.wordBank.contains(ws)){
+                        if(!this.wordBank.containsKey(ws)){
                             for(i = 0; i <= ((int)last.coordinate[1]-(int)first.coordinate[1]); i++)
                                 sb.append(this.grid[(int)first.coordinate[0]+i][(int)first.coordinate[1]+i].letter);
                             ws = sb.toString();
-                            System.out.println(ws);
-                            if(!this.wordBank.contains(ws)) 
+                            if(!this.wordBank.containsKey(ws)) 
                                 return false;
                         }
                     }
                 }
             break;
         }
+        if(!hints.remove(first)) hints.remove(last);
+        this.wordBank.put(ws,true);
         return true;
     }
 
@@ -208,10 +250,14 @@ public class Grid{
 			return true;
 		return false;
 	}
+
+    public Letter gimmeAHint(){
+        Letter a = this.hints.get(new Random().nextInt(hints.size()));
+        return a;
+    }
 	
-	public ArrayList<String> generateWordBank(ArrayList<String> possibleWords){
+	public HashMap<String,Boolean> generateWordBank(ArrayList<String> possibleWords){
 		//variables for creation
-		int i = 0;
 		int j = 0;
 		float currentDens = 0;
 		//rng
@@ -221,13 +267,11 @@ public class Grid{
 			//make a random integer in the range of the size of the word file
 			j = r.nextInt((possibleWords.size()));
 			//add the string located at the index of j
-			this.wordBank.add(possibleWords.get(j));
-			//remove that word from the possible list of words
-			possibleWords.remove(j);
+			this.wordBank.put(possibleWords.get(j),false);
 			//add load to capacity
-			currentDens += ((double)wordBank.get(i).length()/400.0);
-			//increment i to help add next word
-            i++;
+			currentDens += ((double)possibleWords.get(j).length()/400.0);
+			//remove word
+            possibleWords.remove(j);
 		}
 		//return our shiny new word bank
 		return this.wordBank;
@@ -320,6 +364,7 @@ public class Grid{
             case "N":
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
+                    if (i == 0) this.hints.add(l);
                     this.grid[p][q] = l;
                     q--;
                 }
@@ -327,6 +372,7 @@ public class Grid{
             case "S":
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
+                    if (i == 0) this.hints.add(l);
                     this.grid[p][q] = l;
                     q++;
                 }
@@ -334,6 +380,7 @@ public class Grid{
             case "E":
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
+                    if (i == 0) this.hints.add(l);
                     this.grid[p][q] = l;
                     p++;
                 }
@@ -341,6 +388,7 @@ public class Grid{
             case "W":
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
+                    if (i == 0) this.hints.add(l);
                     this.grid[p][q] = l;
                     p--;
                 }
@@ -348,6 +396,7 @@ public class Grid{
             case "NW":
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
+                    if (i == 0) this.hints.add(l);
                     this.grid[p][q] = l;
                     q--;
                     p--;
@@ -356,6 +405,7 @@ public class Grid{
             case "SW":
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
+                    if (i == 0) this.hints.add(l);
                     this.grid[p][q] = l;
                     q++;
                     p--;
@@ -364,6 +414,7 @@ public class Grid{
             case "NE":
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
+                    if (i == 0) this.hints.add(l);
                     this.grid[p][q] = l;
                     q--;
                     p++;
@@ -372,6 +423,7 @@ public class Grid{
             case "SE":
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
+                    if (i == 0) this.hints.add(l);
                     this.grid[p][q] = l;
                     q++;
                     p++;
@@ -381,7 +433,7 @@ public class Grid{
         return true;
     }
 
-	public Letter[][] fillGrid(ArrayList<String> wordBank){
+	public Letter[][] fillGrid(HashMap<String, Boolean> wordBank){
         if(wordBank.isEmpty()) return null;
         Random p = new Random();
         Random q = new Random();
@@ -389,13 +441,13 @@ public class Grid{
         boolean hit = false;
         String[] failures = new String[10];
         int failindex = 0;
-        for(String i:wordBank){
-            char[] ichar = i.toCharArray();
+        for(Map.Entry<String, Boolean> i:wordBank.entrySet()){
+            char[] ichar = i.getKey().toCharArray();
             hit = false;
             int failcounter = 0;
             while(!hit){
                 if(failcounter == 100){
-                    failures[failindex] = i;
+                    failures[failindex] = i.getKey();
                     failindex++;
                     //100 fails, word must be too big for remaining area.
                     break;

@@ -3,7 +3,9 @@ let connection = new WebSocket(serverUrl);
 
 let userSession = {
     uid: null,
-    username: null
+    username: null,
+    gameId: null,
+    screen: "landing"
 };
 
 connection.onopen = function (evt) {
@@ -41,6 +43,12 @@ connection.onmessage = function(event) {
             case "updateConcurrentLeaderboard":
 
               break;
+          }
+          break;
+        case "ready":
+          if(userSession.gameId == msg.gameId) {
+            let playersArray = JSON.parse(msg.players);
+            window.updateReadyScreen(playersArray);
           }
           break;
         case "game":

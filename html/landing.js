@@ -16,10 +16,12 @@ usernameInput.addEventListener('input', () => {
 
 // Validate username on 'Enter'
 usernameInput.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        validateUsername();
-        usernameSubmit.disabled = true;
+    if (usernameInput.value.trim() !== '') {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            validateUsername();
+            usernameSubmit.disabled = true;
+        }
     }
 });
 
@@ -52,11 +54,6 @@ function invalidUsername() {
     usernameInput.style.marginTop = "0";
 }
 
-function enterLobby() {
-    landingPage.classList.add("hidden");
-    lobbyPage.classList.remove("hidden");
-}
-
 function defaultForm() {
     usernameInput.style.marginTop = "40px";
     usernameInput.style.backgroundColor = "#D9D9D9";
@@ -75,7 +72,7 @@ function setUserName(uid, username) {
     if (userSession.uid == uid) {
         // only set user name if it is null
         if (userSession.username == null) {
-            userSession.username = username
+            userSession.username = username;
         }
     }
 }
@@ -84,7 +81,7 @@ function checkValidationMessage(valid, uid, username) {
     if (userSession.uid == uid) {
         if (valid == true) {
             setUserName(uid, username);
-            enterLobby();
+            window.enterLobby();
         } else {
             invalidUsername();
         }
@@ -92,12 +89,8 @@ function checkValidationMessage(valid, uid, username) {
 }
 
 function updateLobby(lobby) {
-    lobbyArray = JSON.parse(lobby)
-    // joinableGamesArray = JSON.parse(lobby.joinableGames);
-    console.log(lobbyArray);
-    console.log(lobby);
+    lobbyArray = JSON.parse(lobby);
     lobbyArray.joinableGames.forEach(game => {
-        console.log(game)
         addGameToList(game);
     });
 }
@@ -105,5 +98,4 @@ function updateLobby(lobby) {
 
 window.checkValidationMessage = checkValidationMessage;
 window.setUserId = setUserId;
-window.enterLobby = enterLobby;
 window.invalidUsername = invalidUsername;

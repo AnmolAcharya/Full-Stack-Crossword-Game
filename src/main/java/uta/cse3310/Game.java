@@ -3,9 +3,6 @@ package uta.cse3310;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import uta.cse3310.*;
-
-
 public class Game{
 	
 	public String gameId;
@@ -15,14 +12,22 @@ public class Game{
 	public ArrayList<Player> leaderboard;
 	public ChatBox chatBox;
 	public GameClock gameClock;
+
+	private final String[] colors = {"red", "blue", "pink", "green"};
+	private final boolean[] colorInUse = new boolean[colors.length];
 	
 	public Game(Player player){
 		this.gameId = generateUniqueID();
+		this.joinable = true;
 		this.players = new ArrayList<Player>();
 		this.leaderboard = new ArrayList<Player>();
-		this.joinable = true;
-		// assign color
+		
+		// assign color, and set color in use, the rest not in use
 		player.color = "red";
+		colorInUse[0] = true;
+		for (int i = 1; i < colorInUse.length; i++) {
+            colorInUse[i] = false;
+        }
 		players.add(player);
 	}
 
@@ -35,28 +40,31 @@ public class Game{
   	}
 	
 	public void addPlayer(Player player){
-		players.add(player);
-		// assign color
-		switch (players.size()) {
-            case 2:
-              player.color = "blue";
-              break;
-          
-            case 3:
-              player.color = "pink";
-              break;
-            
-            case 4:
-              player.color = "green";
-              break;
+		// assign first available color to player
+		for (int i = 0; i < colorInUse.length; i++) {
+            if (!colorInUse[i]) {
+                player.color = colors[i];
+                colorInUse[i] = true;
+                break;
+            }
         }
-		System.out.println("added player");
+		players.add(player);
 		return;
 	}
 	
 	public void removePlayer (Player player){
+		// free color from use
+		for (int i = 0; i < colors.length; i++) {
+            if (colors[i].equals(player.color)) {
+                colorInUse[i] = false;
+                break;
+            }
+        }
+
+		// reset player to not ready
+		player.ready = false;
+
 		players.remove(player);
-		System.out.println("remove player");
 		return;
 	}
 	
@@ -71,9 +79,13 @@ public class Game{
 	public void updateAllTimeLeaderboard(){
 
 	}
-	
-	public Player removePlayer(){
-		return null;
+
+	public void updateJoinable() {
+		if(players.size() == 4 || players.size() == 0){
+			joinable = false;
+		} else {
+			joinable = true;
+		}
 	}
 	
 }

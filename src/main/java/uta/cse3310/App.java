@@ -401,12 +401,14 @@ public class App extends WebSocketServer {
           String text = message.get("message").getAsString();
           Player p = activeSessions.get(uid);
           String userName = p.userName;
+          String playerColor = p.color;
 
           jsonObject = new JsonObject();
           jsonObject.addProperty("screen", "game");
           jsonObject.addProperty("type", "chatRoom");
           jsonObject.addProperty("gameId", gameId);
           jsonObject.addProperty("userName", userName);
+          jsonObject.addProperty("color", playerColor);
           jsonObject.addProperty("textToAdd", text);
 
           System.out.println(jsonObject.toString());

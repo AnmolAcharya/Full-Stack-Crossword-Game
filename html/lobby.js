@@ -24,7 +24,7 @@ createGame.addEventListener('click', function (e) {
 let previousSelection;
 function resetGameSelection(changedGame) {
     const joinableGames = document.querySelectorAll(".gameListItem");
-    
+
     if (previousSelection != null && previousSelection == changedGame) {
         joinGame.disabled = true;
         previousSelection.classList.remove("gameSelected");
@@ -34,7 +34,6 @@ function resetGameSelection(changedGame) {
         game.addEventListener('click', function (e) {
             // Remove previous game selections
             if (previousSelection) {
-                console.log("previous selected");
                 previousSelection.classList.remove("gameSelected");
             }
             // // New Selection
@@ -157,7 +156,6 @@ function addGameToList(msg) {
     gameList.appendChild(newGame);
 
     // add player who created the game into that game
-    //console.log(JSON.parse(players[0]));
     addPlayerToGame(firstPlayer.uid, msg.gameId, playersArray);
     resetGameSelection();
 }
@@ -167,14 +165,16 @@ function removeGameFromList(msg) {
     const games = document.querySelectorAll(".gameListItem");
     let gameId = msg.gameId;
 
-    // add or remove player from game depending on state
-    handleUserState(msg);
+    // if game hasnt started, add or remove player from game depending on state
+    if(msg.joinable == null) {
+        handleUserState(msg);
+    }
 
     // if game id matches, remove game from lists
     games.forEach(game => {
         if (game.dataset.gameId == gameId) {
-            // if no players in game, delete game element. Otherwise, just hide element
-            if (msg.numPlayer == 0) {
+            // if no players in game or game has started, delete game element. Otherwise, just hide element
+            if (msg.numPlayer == 0 || (msg.joinable == false)) {
                 game.remove();
             } else {
                 game.style.display = "none";
@@ -204,8 +204,6 @@ function updateGameListItem(msg) {
             }
         }
     })
-
-    //resetGameSelection();
 }
 
 function updateGames(msg) {
@@ -225,4 +223,5 @@ function updateGames(msg) {
 
 window.updateGames = updateGames;
 window.addGameToList = addGameToList;
+window.removeGameFromList = removeGameFromList;
 window.enterLobby = enterLobby;

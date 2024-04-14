@@ -94,7 +94,6 @@ function updateReadyScreen(players, canStart, gameData) {
     }
 
     if(canStart) {
-        gameData = JSON.parse(gameData);
         enterGame(gameData);
     }
 }

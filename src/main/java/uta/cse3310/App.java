@@ -383,6 +383,7 @@ public class App extends WebSocketServer {
           canStartGame = true;
         }
         if(canStartGame) {
+          G.startGame();
           jsonObject.addProperty("gameData", gson.toJson(G));
         }
         

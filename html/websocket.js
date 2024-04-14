@@ -46,9 +46,14 @@ connection.onmessage = function(event) {
           }
           break;
         case "ready":
+          let gameData;
+          if(msg.start) {
+            gameData = JSON.parse(msg.gameData);
+            window.removeGameFromList(gameData);
+          }
           if(userSession.gameId == msg.gameId) {
             let playersArray = JSON.parse(msg.players, msg.start);
-            window.updateReadyScreen(playersArray, msg.start, msg.gameData);
+            window.updateReadyScreen(playersArray, msg.start, gameData);
           }
           break;
         case "game":

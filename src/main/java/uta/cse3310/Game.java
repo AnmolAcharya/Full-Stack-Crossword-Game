@@ -19,7 +19,7 @@ public class Game{
 		this.gameId = generateUniqueID();
 		this.players = new ArrayList<Player>();
 		this.leaderboard = new ArrayList<Player>();
-		this.gameClock = new GameClock();
+		this.gameClock = new GameClock(5);
 		this.joinable = true;
 		// assign color
 		player.color = "red";

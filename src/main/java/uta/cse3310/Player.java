@@ -1,6 +1,6 @@
 package uta.cse3310;
 
-public class Player{
+public class Player {
 	public String uid;
 	public String userName;
 	public boolean ready;
@@ -32,8 +32,8 @@ public class Player{
 	public void updateHighscore() {
 		if(currentScore > highscore) {
 			highscore = currentScore;
+		}
 	}
-
 }
 
 

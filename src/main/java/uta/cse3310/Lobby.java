@@ -20,6 +20,7 @@ public class Lobby{
     public void updateLobby(Map<String, Game> activeGames) {
         joinableGames.clear();
         concurrentLeaderboard.clear();
+        Collections.sort(allTimeLeaderboard,(p1,p2)-> p1.highscore-p2.highscore);
 
         for (Map.Entry<String, Game> entry : activeGames.entrySet()) {
             Game game = entry.getValue();

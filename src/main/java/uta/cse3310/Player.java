@@ -30,10 +30,9 @@ public class Player {
 		}
 	}
 
+	// highscore treated as most words found by player among all played games in a session
 	public void updateHighscore() {
-		if(currentScore > highscore) {
-			highscore = currentScore;
-		}
+		highscore += currentScore;
 	}
 }
 

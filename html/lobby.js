@@ -23,12 +23,9 @@ createGame.addEventListener('click', function (e) {
 
 let previousSelection;
 function resetGameSelection(changedGame) {
-    console.log("Reset game selection");
     const joinableGames = document.querySelectorAll(".gameListItem");
-    console.log(previousSelection);
-    console.log(changedGame);
+    
     if (previousSelection != null && previousSelection == changedGame) {
-        console.log("changed game");
         joinGame.disabled = true;
         previousSelection.classList.remove("gameSelected");
     }

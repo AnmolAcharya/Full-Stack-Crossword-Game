@@ -40,9 +40,10 @@ exitButton.addEventListener('click', () => {
     window.enterLobby();
 })
 
-function enterGame() {
+function enterGame(gameData) {
     readyPage.classList.add("hidden");
     gamePage.classList.remove("hidden");
+    console.log(gameData);
 }
 
 function resetPlayerDiv(playerDiv) {
@@ -61,7 +62,7 @@ function resetPlayerDivs(joinedPlayers, numPlayers) {
     }
 }
 
-function updateReadyScreen(players, canStart) {
+function updateReadyScreen(players, canStart, gameData) {
     // if no players in the game, dont update ready screen
     if(!players) {
         return;
@@ -93,7 +94,8 @@ function updateReadyScreen(players, canStart) {
     }
 
     if(canStart) {
-        enterGame();
+        gameData = JSON.parse(gameData);
+        enterGame(gameData);
     }
 }
 

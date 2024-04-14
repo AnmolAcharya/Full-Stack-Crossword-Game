@@ -16,15 +16,20 @@ public class Game {
 	private final String[] colors = {"red", "blue", "pink", "green"};
 	private final boolean[] colorInUse = new boolean[colors.length];
 	
-	public Game(Player player){
+	public Game(Player player, ArrayList<String> words){
 		this.gameId = generateUniqueID();
-		this.joinable = true;
-		this.players = new ArrayList<Player>();
-		this.leaderboard = new ArrayList<Player>();
-		this.gameClock = new GameClock(5);
 		this.gameTitle = gameId.substring(0, 4);
+		this.joinable = true;
+		this.grid = new Grid();
+		this.grid.generateWordBank(words);
+		this.grid.fillGrid(grid.wordBank);
+		this.players = new ArrayList<Player>();
+		this.leaderboard = players;
+		this.gameClock = new GameClock(5);
+
 		
-		// assign color, and set color in use, the rest not in use
+		// reset score, assign color and set color in use, the rest not in use
+		player.currentScore = 0;
 		player.color = "red";
 		colorInUse[0] = true;
 		for (int i = 1; i < colorInUse.length; i++) {
@@ -73,7 +78,7 @@ public class Game {
 	
 	public void updateLeaderboard(Player player, int points){
 		player.updateScore(points);
-		//Collections.sort(players,(p1,p2)-> p1.currentScore-p2.currentScore);
+		Collections.sort(leaderboard,(p1,p2) -> Integer.compare(p2.currentScore, p1.currentScore));
 	}
 
 	public void updateAllTimeLeaderboard(){

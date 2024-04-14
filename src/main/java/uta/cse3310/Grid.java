@@ -5,14 +5,14 @@ import java.util.Random;
 
 public class Grid{
 	
-	public Letter[][] grid = new Letter[25][25];
+	public Letter[][] grid = new Letter[20][20];
 	public ArrayList<String> wordBank;
 	public double density = .7;
     public String[] directions = {"N","S","E","W","NW","SW","NE","SE"};
 	public Grid(){
         wordBank = new ArrayList<String>();
-        for(int i = 0; i < 25; i++){
-            for(int j = 0; j < 25; j++){
+        for(int i = 0; i < 20; i++){
+            for(int j = 0; j < 20; j++){
                 Letter l = new Letter(' ',0,0);
                 this.grid[i][j] = l;
             }
@@ -225,7 +225,7 @@ public class Grid{
 			//remove that word from the possible list of words
 			possibleWords.remove(j);
 			//add load to capacity
-			currentDens += ((double)wordBank.get(i).length()/625.0);
+			currentDens += ((double)wordBank.get(i).length()/400.0);
 			//increment i to help add next word
             i++;
 		}
@@ -246,7 +246,7 @@ public class Grid{
                 break;
             case "S":
                 for(int i = 0; i< word.length; i++){
-                    if(q>24)
+                    if(q>19)
                         return false;
                     if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
                         return false;
@@ -255,7 +255,7 @@ public class Grid{
                 break;
             case "E":
                 for(int i = 0; i < word.length; i++){
-                    if(p>24)
+                    if(p>19)
                         return false;
                     if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
                         return false;
@@ -283,7 +283,7 @@ public class Grid{
                 break;
             case "SW":
                 for(int i = 0; i < word.length; i++){
-                    if(p<0||q>24)
+                    if(p<0||q>19)
                         return false;
                     if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
                         return false;
@@ -293,7 +293,7 @@ public class Grid{
                 break;
             case "NE":
                 for(int i = 0; i < word.length; i++){
-                    if(p>24||q<0)
+                    if(p>19||q<0)
                         return false;
                     if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
                         return false;
@@ -303,7 +303,7 @@ public class Grid{
                 break;
             case "SE":
                 for(int i = 0; i < word.length; i++){
-                    if(p>24||q>24)
+                    if(p>19||q>19)
                         return false;
                     if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
                         return false;
@@ -403,8 +403,8 @@ public class Grid{
                 int r = p.nextInt(8);
                 String startd = directions[r];
                 String d = startd;
-                int a = p.nextInt(25);
-                int b = q.nextInt(25);
+                int a = p.nextInt(20);
+                int b = q.nextInt(20);
                 if(this.grid[a][b].letter != ' ') continue;
                 if((hmm = validateGrid(a, b, ichar, d)) == false){
                     r = (r+1)%8;
@@ -424,8 +424,8 @@ public class Grid{
                 }
             }
         }
-        for(int j = 0; j < 25; j++){
-            for(int k = 0; k < 25; k++){
+        for(int j = 0; j < 20; j++){
+            for(int k = 0; k < 20; k++){
                 if(this.grid[j][k].letter == ' '){
                     Letter l = new Letter((char)(p.nextInt(26)+97),j,k);
                     this.grid[j][k] = l;

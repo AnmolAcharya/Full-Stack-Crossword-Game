@@ -50,7 +50,7 @@ public class App extends WebSocketServer {
   public ArrayList<String> getWords() {
     String str;
     try {
-      BufferedReader reader = new BufferedReader(new FileReader("filtered_words.txt"));
+      BufferedReader reader = new BufferedReader(new FileReader("src/filtered_words.txt"));
       while ((str = reader.readLine()) != null)
         this.words.add(str);
       reader.close();
@@ -247,7 +247,7 @@ public class App extends WebSocketServer {
           // retrieve player
           Player p = activeSessions.get(uid);
           // create new game object
-          Game G = new Game(p);
+          Game G = new Game(p, words);
           p.gameId = G.gameId;
 
           // add game to active games map and update lobby
@@ -382,6 +382,9 @@ public class App extends WebSocketServer {
         } else if(readyPlayerCount >2) {
           canStartGame = true;
         }
+        if(canStartGame) {
+          jsonObject.addProperty("gameData", gson.toJson(G));
+        }
         
         jsonObject.addProperty("start", canStartGame);
         jsonObject.addProperty("players", gson.toJson(jsonArray));
@@ -434,6 +437,7 @@ public class App extends WebSocketServer {
 
     port = 9880;
     App A = new App(port);
+    A.getWords();
     A.start();
     System.out.println("websocket Server started on port: " + port);
 

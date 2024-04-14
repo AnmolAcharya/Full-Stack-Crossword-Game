@@ -151,7 +151,7 @@ public class App extends WebSocketServer {
     
     // broadcast JSON message
     broadcast(jsonObject.toString());
-    
+
     // absolutley extirpate the disconnected player off the face of the earth
     disconectedPlayer = null;
   }
@@ -292,7 +292,7 @@ public class App extends WebSocketServer {
           jsonObject.addProperty("uid", uid);
           jsonObject.addProperty("userState", "join");
           // If game is not joinable remove game from list, else just update game list
-          if (G.joinable) {
+          if (G.players.size() < 4) {
             jsonObject.addProperty("function", "update");
           } else {
             jsonObject.addProperty("function", "remove");

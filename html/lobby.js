@@ -143,7 +143,7 @@ function addGameToList(msg) {
     newGame.classList.add('gameListItem');
     newGame.setAttribute('tabindex', '0');
     newGame.setAttribute('data-game-id', msg.gameId);
-    newGame.textContent = "Match" + msg.gameTitle;
+    newGame.textContent = "Match " + msg.gameTitle;
 
     const playerSpan = document.createElement('span');
     playerSpan.className = 'players';

@@ -22,7 +22,7 @@ public class Game {
 		this.players = new ArrayList<Player>();
 		this.leaderboard = new ArrayList<Player>();
 		this.gameClock = new GameClock(5);
-		this.gameTitle = gameId.substring(0, 3);
+		this.gameTitle = gameId.substring(0, 4);
 		
 		// assign color, and set color in use, the rest not in use
 		player.color = "red";
@@ -73,13 +73,13 @@ public class Game {
 	
 	public void updateLeaderboard(Player player, int points){
 		player.updateScore(points);
-		Collections.sort(players,(p1,p2)-> p1.currentScore-p2.currentScore);
+		//Collections.sort(players,(p1,p2)-> p1.currentScore-p2.currentScore);
 	}
 
 	public void updateAllTimeLeaderboard(){
 		for(int i = 0; i < players.size(); i++) {
 			players.get(i).updateHighscore();
-			Lobby.allTimeLeaderboard.add(players.get(i).highscore);
+			//Lobby.allTimeLeaderboard.add(players.get(i).highscore);
 		}
 	}
 

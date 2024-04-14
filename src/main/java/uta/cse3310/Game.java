@@ -3,7 +3,7 @@ package uta.cse3310;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Game{
+public class Game {
 	
 	public String gameId;
 	public String gameTitle;
@@ -71,16 +71,16 @@ public class Game{
 		return;
 	}
 	
-	public void endGame(){
-	
-	}
-	
-	public void updateLeaderboard(){
-
+	public void updateLeaderboard(Player player, int points){
+		player.updateScore(points);
+		Collections.sort(players,(p1,p2)-> p1.currentScore-p2.currentScore);
 	}
 
 	public void updateAllTimeLeaderboard(){
-
+		for(int i = 0; i < players.size(); i++) {
+			players.get(i).updateHighscore();
+			Lobby.allTimeLeaderboard.add(players.get(i).highscore);
+		}
 	}
 
 	public void updateJoinable() {
@@ -90,7 +90,8 @@ public class Game{
 			joinable = true;
 		}
 	}
-	
-	
-	
+
+	public void endGame(){
+		updateAllTimeLeaderboard();
+	}	
 }

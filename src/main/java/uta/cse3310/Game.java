@@ -77,7 +77,7 @@ public class Game{
 	}
 
 	public void updateAllTimeLeaderboard(){
-
+		player.updateHighscore();
 	}
 
 	public void updateJoinable() {

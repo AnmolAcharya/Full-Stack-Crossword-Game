@@ -5,13 +5,13 @@ public class Player{
 	public String userName;
 	public boolean ready;
 	public String color;
-	public int highScore;
+	public int highscore;
 	public int currentScore;
 
 	public Player(String uid) {
 		this.uid = uid;
 		this.currentScore = 0;
-		this.highScore = 0;
+		this.highscore = 0;
 		this.ready = false;
 	}
 
@@ -30,8 +30,8 @@ public class Player{
 	}
 
 	public void updateHighscore() {
-		if(currentScore > highScore) {
-			highScore = currentScore;
+		if(currentScore > highscore) {
+			highscore = currentScore;
 	}
 
 }

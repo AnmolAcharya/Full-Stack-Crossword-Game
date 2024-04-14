@@ -6,6 +6,7 @@ import java.util.UUID;
 public class Game{
 	
 	public String gameId;
+	public String gameTitle;
 	public boolean joinable;
 	public Grid grid;
 	public ArrayList<Player> players;
@@ -21,6 +22,7 @@ public class Game{
 		this.players = new ArrayList<Player>();
 		this.leaderboard = new ArrayList<Player>();
 		this.gameClock = new GameClock(5);
+		this.gameTitle = gameId.substring(0, 3);
 		
 		// assign color, and set color in use, the rest not in use
 		player.color = "red";
@@ -32,6 +34,7 @@ public class Game{
 	}
 
 	public void startGame(){
+		joinable = false;
 		gameClock.startTimer();
 	}
 	
@@ -81,7 +84,7 @@ public class Game{
 	}
 
 	public void updateJoinable() {
-		if(players.size() == 4 || players.size() == 0){
+		if(players.size() == 0){
 			joinable = false;
 		} else {
 			joinable = true;

@@ -40,6 +40,11 @@ exitButton.addEventListener('click', () => {
     window.enterLobby();
 })
 
+function enterGame() {
+    readyPage.classList.add("hidden");
+    gamePage.classList.remove("hidden");
+}
+
 function resetPlayerDiv(playerDiv) {
     playerBubble = playerDiv.querySelector(".playerBubble");
     playeName = playerBubble.querySelector("h2");
@@ -56,7 +61,7 @@ function resetPlayerDivs(joinedPlayers, numPlayers) {
     }
 }
 
-function updateReadyScreen(players) {
+function updateReadyScreen(players, canStart) {
     // if no players in the game, dont update ready screen
     if(!players) {
         return;
@@ -85,6 +90,10 @@ function updateReadyScreen(players) {
                 readyStatus.classList.remove("ready");
             }
         }
+    }
+
+    if(canStart) {
+        enterGame();
     }
 }
 

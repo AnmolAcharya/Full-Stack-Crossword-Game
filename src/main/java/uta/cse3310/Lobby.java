@@ -33,10 +33,6 @@ public class Lobby{
         }
     }
 
-	public void addPlayerToGame(Player player, Game game){
-		game.players.add(player);
-	}
-
 }
 
 

@@ -2,6 +2,7 @@ package uta.cse3310;
 
 public class Player{
 	public String uid;
+	public String gameId;
 	public String userName;
 	public boolean ready;
 	public String color;

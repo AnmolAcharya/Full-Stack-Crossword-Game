@@ -40,6 +40,7 @@ public class App extends WebSocketServer {
 
   public Lobby lobby = new Lobby();
   public ArrayList<String> usernames = new ArrayList<String>();
+  public Map<WebSocket, Player> activeConnections = new HashMap<WebSocket, Player>();
   public Map<String, Player> activeSessions = new HashMap<String, Player>();
   public Map<String, Game> activeGames = new HashMap<String, Game>();
   public ArrayList<String> words = new ArrayList<String>();
@@ -98,24 +99,61 @@ public class App extends WebSocketServer {
   @Override
   public void onClose(WebSocket conn, int code, String reason, boolean remote) {
     System.out.println(conn + " has closed");
-    Player P = activeSessions.get(id);
-    activeSessions.remove(id); // removed player
+    Player disconectedPlayer = activeConnections.get(conn);
 
-    String a = P.userName;
-    usernames.remove(a);
+    
+    // remove player from server
+    activeConnections.remove(conn);
+    activeSessions.remove(disconectedPlayer.uid);
+    // remove players username from list
+    usernames.remove(disconectedPlayer.userName);
+    
+    System.out.println(disconectedPlayer + " removed"); // removed username from list
+    
+    Gson gson = new Gson();
+    JsonObject jsonObject = new JsonObject();
+    JsonArray jsonArray = new JsonArray();
+    
+    if(disconectedPlayer.gameId != null){
+      Game G = activeGames.get(disconectedPlayer.gameId);
+      // remove player from game and update joinability
+      G.removePlayer(disconectedPlayer);
+      G.updateJoinable();
 
-    System.out.println(a + " removed"); // removed username from list
+      jsonObject.addProperty("numPlayer", G.players.size());
+      if (G.joinable) {
+        jsonObject.addProperty("function", "update");
+        // Add players from game to JSON
+        for (int i = 0; i < G.players.size(); i++) {
+          String jsonPlayer = gson.toJson(G.players.get(i));
+          jsonArray.add(jsonPlayer);
+        }
+        jsonObject.addProperty("players", gson.toJson(jsonArray));
+      } else {
+        jsonObject.addProperty("function", "remove");
+      }
+  
+      // if no players in game
+      if (G.players.size() == 0) {
+        // obliterate game from existence
+        activeGames.remove(G.gameId);
+        G = null;
+      }
 
-    // Retrieve the game tied to the websocket connection
-    Game G = conn.getAttachment();
-    G = null;
-    GsonBuilder builder = new GsonBuilder();
-    Gson gson = builder.create();
-    // send out the game state every time
-    // to everyone
-    String jsonString;
-    jsonString = gson.toJson("Server is closed" + G);
-    broadcast(jsonString);
+    }
+    
+    // prepare JSON message
+    jsonObject.addProperty("screen", "lobby");
+    jsonObject.addProperty("type", "updateGameList");
+    jsonObject.addProperty("uid", disconectedPlayer.uid);
+    jsonObject.addProperty("userState", "leave");
+    jsonObject.addProperty("gameId", disconectedPlayer.gameId);
+    
+    // broadcast JSON message
+    broadcast(jsonObject.toString());
+    
+    // absolutley extirpate the disconnected player off the face of the earth
+    disconectedPlayer = null;
   }
 
   @Override
@@ -161,7 +199,9 @@ public class App extends WebSocketServer {
     String uid = generateUniqueID();
     id = uid;
     Player newPlayer = new Player(uid);
+    activeConnections.put(conn, newPlayer);
     activeSessions.put(uid, newPlayer);
+    lobby.updateLobby(activeGames);
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("screen", "landing");
     jsonObject.addProperty("type", "newSession");
@@ -208,6 +248,7 @@ public class App extends WebSocketServer {
           Player p = activeSessions.get(uid);
           // create new game object
           Game G = new Game(p);
+          p.gameId = G.gameId;
 
           // add game to active games map and update lobby
           activeGames.put(G.gameId, G);
@@ -225,6 +266,7 @@ public class App extends WebSocketServer {
           jsonObject.addProperty("players", gson.toJson(jsonArray));
           jsonObject.addProperty("gameId", G.gameId);
           jsonObject.addProperty("numPlayer", G.players.size());
+          jsonObject.addProperty("gameTitle", G.gameTitle);
 
           // broadcast JSON message
           broadcast(jsonObject.toString());
@@ -236,6 +278,7 @@ public class App extends WebSocketServer {
           gameId = message.get("gameId").getAsString();
           Player player = activeSessions.get(uid);
           Game G = activeGames.get(gameId);
+          player.gameId = G.gameId;
 
           // add player to game and update joinability
           G.addPlayer(player);
@@ -270,6 +313,7 @@ public class App extends WebSocketServer {
           gameId = message.get("gameId").getAsString();
           Player player = activeSessions.get(uid);
           Game G = activeGames.get(gameId);
+          player.gameId = null;
 
           // remove player from game and update joinability
           G.removePlayer(player);
@@ -286,6 +330,7 @@ public class App extends WebSocketServer {
           jsonObject.addProperty("numPlayer", G.players.size());
           if (G.joinable) {
             jsonObject.addProperty("function", "update");
+            jsonObject.addProperty("gameTitle", G.gameTitle);
             // Add players from game to JSON
             for (int i = 0; i < G.players.size(); i++) {
               String jsonPlayer = gson.toJson(G.players.get(i));
@@ -322,10 +367,23 @@ public class App extends WebSocketServer {
         jsonObject.addProperty("screen", "ready");
         jsonObject.addProperty("type", "updateStatus");
         // Add players from game to JSON
+        // check if game can start
+        int readyPlayerCount = 0;
+        boolean canStartGame = false;
         for (int i = 0; i < G.players.size(); i++) {
+          if (G.players.get(i).ready == true) {
+            readyPlayerCount++;
+          }
           String jsonPlayer = gson.toJson(G.players.get(i));
           jsonArray.add(jsonPlayer);
         }
+        if(G.players.size() == 2 && readyPlayerCount == 2) {
+          canStartGame = true;
+        } else if(readyPlayerCount >2) {
+          canStartGame = true;
+        }
+        
+        jsonObject.addProperty("start", canStartGame);
         jsonObject.addProperty("players", gson.toJson(jsonArray));
         jsonObject.addProperty("gameId", G.gameId);
         // broadcast JSON message

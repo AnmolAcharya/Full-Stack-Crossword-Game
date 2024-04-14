@@ -22,15 +22,22 @@ createGame.addEventListener('click', function (e) {
 // Select Game
 
 let previousSelection;
-function resetGameSelection() {
+function resetGameSelection(changedGame) {
     console.log("Reset game selection");
     const joinableGames = document.querySelectorAll(".gameListItem");
-    joinableGames.forEach(function (game) {
-        game.classList.remove("gameSelected");
+    console.log(previousSelection);
+    console.log(changedGame);
+    if (previousSelection != null && previousSelection == changedGame) {
+        console.log("changed game");
         joinGame.disabled = true;
+        previousSelection.classList.remove("gameSelected");
+    }
+    joinableGames.forEach(function (game) {
+        // game.classList.remove("gameSelected");
         game.addEventListener('click', function (e) {
             // Remove previous game selections
             if (previousSelection) {
+                console.log("previous selected");
                 previousSelection.classList.remove("gameSelected");
             }
             // // New Selection
@@ -136,7 +143,7 @@ function addGameToList(msg) {
     newGame.classList.add('gameListItem');
     newGame.setAttribute('tabindex', '0');
     newGame.setAttribute('data-game-id', msg.gameId);
-    newGame.textContent = firstPlayer.userName + "'s Match";
+    newGame.textContent = "Match" + msg.gameTitle;
 
     const playerSpan = document.createElement('span');
     playerSpan.className = 'players';
@@ -144,7 +151,7 @@ function addGameToList(msg) {
     playerSpan.textContent = numOfPlayers + "/4";
 
     // if game is full, hide game from list by default
-    if(numOfPlayers == 4) {
+    if (numOfPlayers == 4) {
         newGame.style.display = "none";
     }
 
@@ -174,8 +181,8 @@ function removeGameFromList(msg) {
                 game.remove();
             } else {
                 game.style.display = "none";
-                resetGameSelection();
             }
+            resetGameSelection(game);
         }
     })
 }
@@ -201,7 +208,7 @@ function updateGameListItem(msg) {
         }
     })
 
-    resetGameSelection();
+    //resetGameSelection();
 }
 
 function updateGames(msg) {

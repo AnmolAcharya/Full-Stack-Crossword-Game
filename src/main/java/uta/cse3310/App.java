@@ -44,6 +44,8 @@ public class App extends WebSocketServer {
   public Map<String, Game> activeGames = new HashMap<String, Game>();
   public ArrayList<String> words = new ArrayList<String>();
 
+  public String id = null;
+
   public ArrayList<String> getWords() {
     String str;
     try {
@@ -96,6 +98,14 @@ public class App extends WebSocketServer {
   @Override
   public void onClose(WebSocket conn, int code, String reason, boolean remote) {
     System.out.println(conn + " has closed");
+    Player P = activeSessions.get(id);
+    activeSessions.remove(id); // removed player
+
+    String a = P.userName;
+    usernames.remove(a);
+
+    System.out.println(a + " removed"); // removed username from list
+
     // Retrieve the game tied to the websocket connection
     Game G = conn.getAttachment();
     G = null;
@@ -104,7 +114,7 @@ public class App extends WebSocketServer {
     // send out the game state every time
     // to everyone
     String jsonString;
-    jsonString = gson.toJson(G);
+    jsonString = gson.toJson("Server is closed" + G);
     broadcast(jsonString);
   }
 
@@ -149,6 +159,7 @@ public class App extends WebSocketServer {
 
   public void handleNewConnection(WebSocket conn, Gson gson) {
     String uid = generateUniqueID();
+    id = uid;
     Player newPlayer = new Player(uid);
     activeSessions.put(uid, newPlayer);
     JsonObject jsonObject = new JsonObject();
@@ -168,6 +179,7 @@ public class App extends WebSocketServer {
     String type = message.get("type").getAsString();
     String uid;
     String gameId;
+    JsonObject jsonObject = new JsonObject();
 
     // Decipher Message
     switch (screen) {
@@ -177,7 +189,7 @@ public class App extends WebSocketServer {
         uid = message.get("uid").getAsString();
         if (type.equals("validateUsername")) {
           // create JSON object
-          JsonObject jsonObject = new JsonObject();
+          jsonObject = new JsonObject();
           jsonObject.addProperty("screen", "landing");
           jsonObject.addProperty("type", "validateUsername");
           jsonObject.addProperty("uid", uid);
@@ -201,7 +213,7 @@ public class App extends WebSocketServer {
           activeGames.put(G.gameId, G);
           lobby.updateLobby(activeGames);
 
-          JsonObject jsonObject = new JsonObject();
+          jsonObject = new JsonObject();
           JsonArray jsonArray = new JsonArray();
           // prepare JSON message
           jsonObject.addProperty("screen", "lobby");
@@ -229,7 +241,7 @@ public class App extends WebSocketServer {
           G.addPlayer(player);
           G.updateJoinable();
 
-          JsonObject jsonObject = new JsonObject();
+          jsonObject = new JsonObject();
           JsonArray jsonArray = new JsonArray();
           // prepare JSON message
           jsonObject.addProperty("screen", "lobby");
@@ -263,7 +275,7 @@ public class App extends WebSocketServer {
           G.removePlayer(player);
           G.updateJoinable();
 
-          JsonObject jsonObject = new JsonObject();
+          jsonObject = new JsonObject();
           JsonArray jsonArray = new JsonArray();
           // prepare JSON message
           jsonObject.addProperty("screen", "lobby");
@@ -304,7 +316,7 @@ public class App extends WebSocketServer {
 
         player.ready = message.get("ready").getAsBoolean();
 
-        JsonObject jsonObject = new JsonObject();
+        jsonObject = new JsonObject();
         JsonArray jsonArray = new JsonArray();
         // prepare JSON message
         jsonObject.addProperty("screen", "ready");
@@ -321,7 +333,24 @@ public class App extends WebSocketServer {
 
         break;
       case "game":
+        if (type.equals("chatRoom")) {
+          uid = message.get("uid").getAsString();
+          gameId = message.get("gameId").getAsString();
+          String text = message.get("message").getAsString();
+          Player p = activeSessions.get(uid);
+          String userName = p.userName;
 
+          jsonObject = new JsonObject();
+          jsonObject.addProperty("screen", "game");
+          jsonObject.addProperty("type", "chatRoom");
+          jsonObject.addProperty("gameId", gameId);
+          jsonObject.addProperty("userName", userName);
+          jsonObject.addProperty("textToAdd", text);
+
+          System.out.println(jsonObject.toString());
+          broadcast(jsonObject.toString());
+
+        }
         break;
     }
   }

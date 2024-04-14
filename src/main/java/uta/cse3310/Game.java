@@ -10,7 +10,6 @@ public class Game{
 	public Grid grid;
 	public ArrayList<Player> players;
 	public ArrayList<Player> leaderboard;
-	public ChatBox chatBox;
 	public GameClock gameClock;
 
 	private final String[] colors = {"red", "blue", "pink", "green"};
@@ -21,6 +20,7 @@ public class Game{
 		this.joinable = true;
 		this.players = new ArrayList<Player>();
 		this.leaderboard = new ArrayList<Player>();
+		this.gameClock = new GameClock(5);
 		
 		// assign color, and set color in use, the rest not in use
 		player.color = "red";
@@ -32,7 +32,7 @@ public class Game{
 	}
 
 	public void startGame(){
-		
+		gameClock.startTimer();
 	}
 	
 	public static String generateUniqueID() {
@@ -87,5 +87,7 @@ public class Game{
 			joinable = true;
 		}
 	}
+	
+	
 	
 }

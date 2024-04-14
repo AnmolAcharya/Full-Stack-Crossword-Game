@@ -174,11 +174,10 @@ function removeGameFromList(msg) {
                 game.remove();
             } else {
                 game.style.display = "none";
+                resetGameSelection();
             }
         }
     })
-
-    resetGameSelection();
 }
 
 function updateGameListItem(msg) {

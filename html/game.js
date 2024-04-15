@@ -5,6 +5,7 @@ const chatInput = document.querySelector('.chatInput');
 const chatList = document.querySelector(".messageList");
 const leaderboard = document.querySelector(".leaderboardList");
 const leaderboardEntry = leaderboard.querySelectorAll(".player");
+const exitGameButton = document.getElementById("gameScreen").querySelector(".exitButton");
 
 let firstSelection = null;
 let secondSelection = null;
@@ -15,8 +16,24 @@ colorMap.set("red", "#E51B1B");
 colorMap.set("blue", "#106BFF");
 colorMap.set("pink", "#E100A5");
 colorMap.set("green", "#06A600");
-
+// reset grid for new game
 wordGrid.innerHTML = '';
+
+// exiting game
+exitGameButton.addEventListener('click', () => {
+    // send status to server
+    let message = {
+        screen: "game",
+        type: "leaveGame",
+        uid: userSession.uid,
+        gameId: userSession.gameId,
+    };
+    connection.send(JSON.stringify(message));
+
+    // update user state
+    userSession.gameId = null;
+    window.enterLobby();
+})
 
 // Send chat on 'Enter'
 chatInput.addEventListener('keypress', function (e) {

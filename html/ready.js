@@ -1,5 +1,5 @@
 const readyButton = document.querySelector(".readyButton")
-const exitButton = document.getElementById("readyScreen").querySelector(".exitButton");
+const exitReadyButton = document.getElementById("readyScreen").querySelector(".exitButton");
 
 readyButton.addEventListener('click', () => {
     // update ready button state for user
@@ -25,7 +25,7 @@ readyButton.addEventListener('click', () => {
     connection.send(JSON.stringify(message));
 });
 
-exitButton.addEventListener('click', () => {
+exitReadyButton.addEventListener('click', () => {
     // send status to server
     let message = {
         screen: "lobby",

@@ -84,6 +84,8 @@ connection.onmessage = function(event) {
               case "chatRoom":
                 window.updateChatBox(msg.userName, msg.color, msg.textToAdd);
                 break;
+              case "leaveGame":
+                window.updateLeaderboard(JSON.parse(msg.leaderboard));
             }
           }
       }

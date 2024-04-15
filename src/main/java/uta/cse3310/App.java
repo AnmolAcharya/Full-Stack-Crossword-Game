@@ -485,6 +485,33 @@ public class App extends WebSocketServer {
           jsonObject.addProperty("gameId", gameId);
 
           broadcast(jsonObject.toString());
+        } else if(type.equals("leaveGame")) {
+          // get player that's leaving game, and the game they are leaving
+          uid = message.get("uid").getAsString();
+          gameId = message.get("gameId").getAsString();
+          Player p = activeSessions.get(uid);
+          Game g = activeGames.get(gameId);
+          p.gameId = null;
+
+          // remove player from game
+          g.removePlayer(p);
+
+          jsonObject = new JsonObject();
+          // prepare JSON message
+          jsonObject.addProperty("screen", "game");
+          jsonObject.addProperty("type", "leaveGame");
+          jsonObject.addProperty("gameId", g.gameId);
+          jsonObject.addProperty("leaderboard", gson.toJson(g.leaderboard));
+
+          // if no players in game
+          if (g.players.size() == 0) {
+            // obliterate game from existence
+            activeGames.remove(g.gameId);
+            g = null;
+          }
+
+          // broadcast JSON message
+          broadcast(jsonObject.toString());
         }
         break;
     }

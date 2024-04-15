@@ -3,8 +3,7 @@ const wordBank = document.querySelector(".wordBank");
 const chatForm = document.querySelector('.chatForm')
 const chatInput = document.querySelector('.chatInput');
 const chatList = document.querySelector(".messageList");
-const leaderboard = document.querySelector(".leaderboardList");
-const leaderboardEntry = leaderboard.querySelectorAll(".player");
+const leaderboard = document.querySelectorAll(".leaderboardList");
 const exitGameButton = document.getElementById("gameScreen").querySelector(".exitButton");
 const backToLobbyButton = document.querySelector(".backToLobby");
 const gameTimer = document.querySelector(".gameTimerValue");
@@ -110,7 +109,6 @@ function startTimer() {
 
 function updateTimer(endTime) {
     const remaining = endTime - Date.now();
-    console.log(remaining);
     if (remaining > 0) {
         const seconds = Math.floor((remaining / 1000) % 60);
         const minutes = Math.floor((remaining / 1000) / 60);
@@ -249,18 +247,21 @@ function updateWordBank(updatedWordBank) {
 
 function updateLeaderboard(updatedLeaderboard) {
     //updatedLeaderboard = JSON.parse(updatedLeaderboard);
-    let numPlayers = updatedLeaderboard.length
-    for (let i = 0; i < numPlayers; i++) {
-        let playerObject = updatedLeaderboard[i];
-        leaderboardEntry[i].id = `${playerObject.color}Player`;
-        leaderboardEntry[i].querySelector(".username").textContent = playerObject.userName;
-        leaderboardEntry[i].querySelector(".wordsFound").textContent = playerObject.currentScore;
-    }
-    for (let i = numPlayers; i < 4; i++) {
-        leaderboardEntry[i].removeAttribute("id");
-        leaderboardEntry[i].querySelector(".username").textContent = "";
-        leaderboardEntry[i].querySelector(".wordsFound").textContent = "";
-    }
+    leaderboard.forEach(leaderboardList => {
+        const leaderboardEntry = leaderboardList.querySelectorAll(".player");
+        let numPlayers = updatedLeaderboard.length
+        for (let i = 0; i < numPlayers; i++) {
+            let playerObject = updatedLeaderboard[i];
+            leaderboardEntry[i].id = `${playerObject.color}Player`;
+            leaderboardEntry[i].querySelector(".username").textContent = playerObject.userName;
+            leaderboardEntry[i].querySelector(".wordsFound").textContent = playerObject.currentScore;
+        }
+        for (let i = numPlayers; i < 4; i++) {
+            leaderboardEntry[i].removeAttribute("id");
+            leaderboardEntry[i].querySelector(".username").textContent = "";
+            leaderboardEntry[i].querySelector(".wordsFound").textContent = "";
+        }
+    })
 }
 
 function endGame() {

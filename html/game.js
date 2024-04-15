@@ -114,6 +114,17 @@ function sendLetterSelection(xCoordinate, yCoordinate) {
     connection.send(JSON.stringify(message));
 }
 
+function sendWordSelection(firstLetter, secondLetter) {
+    let message = {
+        screen: "game",
+        type: "validateWord",
+        uid: userSession.uid,
+        gameId: userSession.gameId,
+        letterCoordinate: [xCoordinate, yCoordinate]
+    };
+    connection.send(JSON.stringify(message));
+}
+
 function updateLetterSelection(xCoordinate, yCoordinate, selections) {
     const gridItem = document.getElementById(`gridItem-${xCoordinate}-${yCoordinate}`);
 
@@ -130,6 +141,21 @@ function updateLetterSelection(xCoordinate, yCoordinate, selections) {
     // Remove the trailing comma and apply the box-shadow to simulate inner borders
     boxShadowValue = boxShadowValue.slice(0, -1);
     gridItem.style.boxShadow = boxShadowValue;
+}
+
+function highlightWordOnGrid(firstCoord, secondCoord) {
+    // Assuming row-major order and 1D transformation of coordinates
+    const startX = Math.min(firstCoord.x, secondCoord.x);
+    const endX = Math.max(firstCoord.x, secondCoord.x);
+    const startY = Math.min(firstCoord.y, secondCoord.y);
+    const endY = Math.max(firstCoord.y, secondCoord.y);
+
+    for (let x = startX; x <= endX; x++) {
+        for (let y = startY; y <= endY; y++) {
+            const elementId = `grid-item-${x}-${y}`;
+            document.getElementById(elementId).classList.add('highlighted');
+        }
+    }
 }
 
 window.setUpGame = setUpGame;

@@ -77,12 +77,12 @@ public class Grid{
                 if(first.coordinate[0] > last.coordinate[0]){
                     d = first.coordinate[0]-last.coordinate[0];
                     for(i = 0; i <= d; i++)
-                        sb.append(this.grid[(int)first.coordinate[0]-i][(int)first.coordinate[1]].letter);
+                        sb.append(this.grid[(int)first.coordinate[1]][(int)first.coordinate[0]-i].letter);
                     ws = sb.toString();
                     sb.delete(0,sb.length());
                     if(!this.wordBank.containsKey(ws)){
                         for(i = 0; i <= d; i++)
-                            sb.append(this.grid[(int)last.coordinate[0]+i][(int)last.coordinate[1]].letter);
+                            sb.append(this.grid[(int)last.coordinate[1]][(int)last.coordinate[0]+i].letter);
                         ws = sb.toString();
                         if(!this.wordBank.containsKey(ws))
                             return false;
@@ -95,13 +95,14 @@ public class Grid{
                 }
                 else if(last.coordinate[0] > first.coordinate[0]){
                     d = last.coordinate[0] - first.coordinate[0];
-                    for(i = 0; i <= d; i++)
-                        sb.append(this.grid[(int)first.coordinate[0]+i][(int)first.coordinate[1]].letter);
+                    for(i = 0; i <= d; i++){
+                        sb.append(this.grid[(int)first.coordinate[1]][(int)first.coordinate[0]+i].letter);
+                    }
                     ws = sb.toString();
                     sb.delete(0,sb.length());
                     if(!this.wordBank.containsKey(ws)){
                         for(i = 0; i <= d; i++)
-                            sb.append(this.grid[(int)last.coordinate[0]-i][(int)last.coordinate[1]].letter);
+                            sb.append(this.grid[(int)last.coordinate[1]][(int)last.coordinate[0]-i].letter);
                         ws = sb.toString();
                         if(!this.wordBank.containsKey(ws))
                             return false;
@@ -117,13 +118,13 @@ public class Grid{
                 if(first.coordinate[1] > last.coordinate[1]){
                     d = first.coordinate[1]-last.coordinate[1];
                     for(i = 0; i <= d; i++){
-                        sb.append(this.grid[(int)first.coordinate[0]][(int)first.coordinate[1]-i].letter);
+                        sb.append(this.grid[(int)first.coordinate[1]-i][(int)first.coordinate[0]].letter);
                     }
                     ws = sb.toString();
                     sb.delete(0,sb.length());
                     if(!this.wordBank.containsKey(ws)){
                         for(i = 0; i <= d; i++)
-                            sb.append(this.grid[(int)last.coordinate[0]][(int)last.coordinate[1]+i].letter);
+                            sb.append(this.grid[(int)last.coordinate[1]+i][(int)last.coordinate[0]].letter);
                         ws = sb.toString();
                         if(!this.wordBank.containsKey(ws))
                             return false;
@@ -137,12 +138,12 @@ public class Grid{
                 else if(last.coordinate[1] > first.coordinate[1]){
                     d = last.coordinate[1] - first.coordinate[1];
                     for(i = 0; i <= d; i++)
-                        sb.append(this.grid[(int)first.coordinate[0]][(int)first.coordinate[1]+i].letter);
+                        sb.append(this.grid[(int)first.coordinate[1]+i][(int)first.coordinate[0]].letter);
                     ws = sb.toString();
                     sb.delete(0,sb.length());
                     if(!this.wordBank.containsKey(ws)){
                         for(i = 0; i <= d; i++)
-                            sb.append(this.grid[(int)last.coordinate[0]][(int)last.coordinate[1]-i].letter);
+                            sb.append(this.grid[(int)last.coordinate[1]-i][(int)last.coordinate[0]].letter);
                         ws = sb.toString();
                         if(!this.wordBank.containsKey(ws))
                             return false;
@@ -158,13 +159,13 @@ public class Grid{
                 if(first.coordinate[1]>last.coordinate[1]){
                     if(first.coordinate[0]>last.coordinate[0]){
                         for(i = 0; i <=((int)first.coordinate[1]-(int)last.coordinate[1]); i++){
-                            sb.append(this.grid[(int)first.coordinate[0]-i][(int)first.coordinate[1]-i].letter);
+                            sb.append(this.grid[(int)first.coordinate[1]-i][(int)first.coordinate[0]-i].letter);
                         }
                         ws = sb.toString();
                         sb.delete(0,sb.length());
                         if(!this.wordBank.containsKey(ws)){
                             for(i = 0; i <= ((int)first.coordinate[1]-(int)last.coordinate[1]); i++)
-                                sb.append(this.grid[(int)last.coordinate[0]+i][(int)last.coordinate[1]+i].letter);
+                                sb.append(this.grid[(int)last.coordinate[1]+i][(int)last.coordinate[0]+i].letter);
                             ws = sb.toString();
                             if(!this.wordBank.containsKey(ws)) 
                                 return false;
@@ -172,13 +173,13 @@ public class Grid{
                     }
                     else if(first.coordinate[0]<last.coordinate[0]){
                         for(i = 0; i <=((int)first.coordinate[1]-(int)last.coordinate[1]); i++){
-                            sb.append(this.grid[(int)first.coordinate[0]+i][(int)first.coordinate[1]-i].letter);
+                            sb.append(this.grid[(int)first.coordinate[1]-i][(int)first.coordinate[0]+i].letter);
                         }
                         ws = sb.toString();
                         sb.delete(0,sb.length());
                         if(!this.wordBank.containsKey(ws)){
                             for(i = 0; i <= ((int)first.coordinate[1]-(int)last.coordinate[1]); i++)
-                                sb.append(this.grid[(int)last.coordinate[0]-i][(int)last.coordinate[1]+i].letter);
+                                sb.append(this.grid[(int)last.coordinate[1]+i][(int)last.coordinate[0]-i].letter);
                             ws = sb.toString();
                             if(!this.wordBank.containsKey(ws)) 
                                 return false;
@@ -188,13 +189,13 @@ public class Grid{
                 else if(last.coordinate[1]>first.coordinate[1]){
                     if(first.coordinate[0]>last.coordinate[0]){
                         for(i = 0; i <=((int)last.coordinate[1]-(int)first.coordinate[1]); i++){
-                            sb.append(this.grid[(int)last.coordinate[0]+i][(int)last.coordinate[1]-i].letter);
+                            sb.append(this.grid[(int)last.coordinate[1]-i][(int)last.coordinate[0]+i].letter);
                         }
                         ws = sb.toString();
                         sb.delete(0,sb.length());
                         if(!this.wordBank.containsKey(ws)){
                             for(i = 0; i <= ((int)last.coordinate[1]-(int)first.coordinate[1]); i++)
-                                sb.append(this.grid[(int)first.coordinate[0]-i][(int)first.coordinate[1]+i].letter);
+                                sb.append(this.grid[(int)first.coordinate[1]+i][(int)first.coordinate[0]-i].letter);
                             ws = sb.toString();
                             if(!this.wordBank.containsKey(ws)) 
                                 return false;
@@ -202,13 +203,13 @@ public class Grid{
                     }
                     else if(first.coordinate[0]<last.coordinate[0]){
                         for(i = 0; i <=((int)last.coordinate[1]-(int)first.coordinate[1]); i++){
-                            sb.append(this.grid[(int)last.coordinate[0]-i][(int)last.coordinate[1]-i].letter);
+                            sb.append(this.grid[(int)last.coordinate[1]-i][(int)last.coordinate[0]-i].letter);
                         }
                         ws = sb.toString();
                         sb.delete(0,sb.length());
                         if(!this.wordBank.containsKey(ws)){
                             for(i = 0; i <= ((int)last.coordinate[1]-(int)first.coordinate[1]); i++)
-                                sb.append(this.grid[(int)first.coordinate[0]+i][(int)first.coordinate[1]+i].letter);
+                                sb.append(this.grid[(int)first.coordinate[1]+i][(int)first.coordinate[0]+i].letter);
                             ws = sb.toString();
                             if(!this.wordBank.containsKey(ws)) 
                                 return false;
@@ -283,7 +284,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(q<0)
                         return false;
-                    if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
+                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
                         return false;
                     q--;
                 }
@@ -292,7 +293,7 @@ public class Grid{
                 for(int i = 0; i< word.length; i++){
                     if(q>19)
                         return false;
-                    if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
+                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
                         return false;
                     q++;
                 }
@@ -301,7 +302,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(p>19)
                         return false;
-                    if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
+                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
                         return false;
                     p++;
                 }
@@ -310,7 +311,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(p<0)
                         return false;
-                    if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
+                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
                         return false;
                     p--;
                 }
@@ -319,7 +320,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(p<0||q<0)
                         return false;
-                    if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
+                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
                         return false;
                     p--;
                     q--;
@@ -329,7 +330,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(p<0||q>19)
                         return false;
-                    if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
+                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
                         return false;
                     p--;
                     q++;
@@ -339,7 +340,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(p>19||q<0)
                         return false;
-                    if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
+                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
                         return false;
                     p++;
                     q--;
@@ -349,7 +350,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(p>19||q>19)
                         return false;
-                    if((this.grid[p][q].letter!=' ')&&(!(this.grid[p][q].letter == word[i])))
+                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
                         return false;
                     p++;
                     q++;
@@ -365,7 +366,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
                     if (i == 0) this.hints.add(l);
-                    this.grid[p][q] = l;
+                    this.grid[q][p] = l;
                     q--;
                 }
                 break;
@@ -373,7 +374,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
                     if (i == 0) this.hints.add(l);
-                    this.grid[p][q] = l;
+                    this.grid[q][p] = l;
                     q++;
                 }
                 break;
@@ -381,7 +382,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
                     if (i == 0) this.hints.add(l);
-                    this.grid[p][q] = l;
+                    this.grid[q][p] = l;
                     p++;
                 }
                 break;
@@ -389,7 +390,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
                     if (i == 0) this.hints.add(l);
-                    this.grid[p][q] = l;
+                    this.grid[q][p] = l;
                     p--;
                 }
                 break;
@@ -397,7 +398,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
                     if (i == 0) this.hints.add(l);
-                    this.grid[p][q] = l;
+                    this.grid[q][p] = l;
                     q--;
                     p--;
                 }
@@ -406,7 +407,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
                     if (i == 0) this.hints.add(l);
-                    this.grid[p][q] = l;
+                    this.grid[q][p] = l;
                     q++;
                     p--;
                 }
@@ -415,7 +416,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
                     if (i == 0) this.hints.add(l);
-                    this.grid[p][q] = l;
+                    this.grid[q][p] = l;
                     q--;
                     p++;
                 }
@@ -424,7 +425,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     Letter l = new Letter(word[i],p,q);
                     if (i == 0) this.hints.add(l);
-                    this.grid[p][q] = l;
+                    this.grid[q][p] = l;
                     q++;
                     p++;
                 }

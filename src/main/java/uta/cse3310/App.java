@@ -540,15 +540,21 @@ public class App extends WebSocketServer implements GameObserver {
   }
 
   public static void main(String[] args) {
+    // Environment variables
+    String testGrid = System.getenv("TEST_GRID");
+    String httpPort = System.getenv("HTTP_PORT");
+    String websocketPort = System.getenv("WEBSOCKET_PORT");
+    String version = System.getenv("VERSION");
+    
     // Set up the http server
-    int port = 9080;
+    int port = (httpPort != null ? Integer.parseInt(httpPort) : 9002);
     HttpServer H = new HttpServer(port, "./html");
     H.start();
     System.out.println("http Server started on port:" + port);
 
     // create and start the websocket server
 
-    port = 9880;
+    port = (websocketPort != null ? Integer.parseInt(websocketPort) : 9102);
     App A = new App(port);
     A.getWords();
     A.start();

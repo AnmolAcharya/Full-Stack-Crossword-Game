@@ -472,7 +472,7 @@ public class Grid{
         for(int j = 0; j < 20; j++){
             for(int k = 0; k < 20; k++){
                 if(this.grid[j][k].letter == ' '){
-                    Letter l = new Letter((char)(p.nextInt(26)+97),j,k);
+                    Letter l = new Letter((char)(p.nextInt(26)+97),k,j);
                     this.grid[j][k] = l;
                 }
             }

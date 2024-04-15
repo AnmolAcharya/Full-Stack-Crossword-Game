@@ -376,7 +376,7 @@ public class App extends WebSocketServer {
           String jsonPlayer = gson.toJson(G.players.get(i));
           jsonArray.add(jsonPlayer);
         }
-        if (G.players.size() == 2 && readyPlayerCount == 2) {
+        if((G.players.size() == 2 || G.players.size() == 3) && readyPlayerCount >= 2) {
           canStartGame = true;
         } else if (readyPlayerCount > 2) {
           canStartGame = true;

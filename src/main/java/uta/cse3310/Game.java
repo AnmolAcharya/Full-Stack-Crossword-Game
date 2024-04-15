@@ -92,10 +92,10 @@ public class Game {
 	
 	public void checkEndGame(){}
 
-	/*public void endGame(Lobby lobby){
+	public void endGame(){
 		for(Player player:players){
 			player.updateHighScore();
 		}
-		lobby.updateAllTimeLeaderboard(players);
-	}*/	
+		Lobby.updateAllTimeLeaderboard(players);
+	}	
 }

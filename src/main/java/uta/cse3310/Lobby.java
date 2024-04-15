@@ -37,9 +37,9 @@ public class Lobby{
     }
     
     
-    public void updateAllTimeLeaderboard(ArrayList<Player> players){
+    public static void updateAllTimeLeaderboard(ArrayList<Player> players){
     	for(Player player: players){
-    		allTimeLeaderboard.get(player.uid).put(player.userName, player.highScore);
+    		App.allTimeLeaderBoard.get(player.uid).put(player.userName, player.highScore);
     	}
     }
 

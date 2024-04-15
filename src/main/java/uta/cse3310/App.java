@@ -45,7 +45,7 @@ public class App extends WebSocketServer {
   public Map<String, Player> activeSessions = new HashMap<String, Player>();
   public Map<String, Game> activeGames = new HashMap<String, Game>();
   public ArrayList<String> words = new ArrayList<String>();
-  public Map<String, Map<String, Integer>> allTimeLeaderBoard = new HashMap<>(); 
+  public static Map<String, Map<String, Integer>> allTimeLeaderBoard = new HashMap<>(); 
   public Lobby lobby = new Lobby(allTimeLeaderBoard);
   public String id = null;
 
@@ -485,9 +485,6 @@ public class App extends WebSocketServer {
           jsonObject.addProperty("gameId", gameId);
 
           broadcast(jsonObject.toString());
-        } else if (type.equals ("endGame")){
-        	
-        
         }
         break;
     }

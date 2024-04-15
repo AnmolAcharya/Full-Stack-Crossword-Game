@@ -6,6 +6,8 @@ const chatList = document.querySelector(".messageList");
 const leaderboard = document.querySelector(".leaderboardList");
 const leaderboardEntry = leaderboard.querySelectorAll(".player");
 const exitGameButton = document.getElementById("gameScreen").querySelector(".exitButton");
+const backToLobbyButton = document.querySelector(".backToLobby");
+const gameTimer = document.querySelector(".gameTimerValue");
 
 let firstSelection = null;
 let secondSelection = null;
@@ -32,6 +34,11 @@ exitGameButton.addEventListener('click', () => {
 
     // update user state
     userSession.gameId = null;
+    window.enterLobby();
+})
+
+// back to lobby on game end
+backToLobbyButton.addEventListener('click', () => {
     window.enterLobby();
 })
 
@@ -93,6 +100,26 @@ function setUpGame(gameData) {
     fillGrid(grid);
     fillWordBank(wordBankList);
     updateLeaderboard(leaderboardList);
+    startTimer();
+}
+
+function startTimer() {
+    const endTime = Date.now() + 300 * 1000;
+    updateTimer(endTime);
+}
+
+function updateTimer(endTime) {
+    const remaining = endTime - Date.now();
+    console.log(remaining);
+    if (remaining > 0) {
+        const seconds = Math.floor((remaining / 1000) % 60);
+        const minutes = Math.floor((remaining / 1000) / 60);
+        gameTimer.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        // update every half second
+        setTimeout(() => updateTimer(endTime), 500);
+    } else {
+        gameTimer.textContent = "0:00";
+    }
 }
 
 function fillGrid(grid) {
@@ -236,9 +263,15 @@ function updateLeaderboard(updatedLeaderboard) {
     }
 }
 
+function endGame() {
+    gamePage.classList.add("hidden");
+    endGamePage.classList.remove("hidden");
+}
+
 window.setUpGame = setUpGame;
 window.updateLetterSelection = updateLetterSelection;
 window.highlightWordOnGrid = highlightWordOnGrid;
 window.updateWordBank = updateWordBank;
 window.updateLeaderboard = updateLeaderboard;
 window.updateChatBox = updateChatBox;
+window.endGame = endGame;

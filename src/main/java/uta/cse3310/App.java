@@ -36,16 +36,15 @@ import com.google.gson.JsonParser;
 
 import java.util.UUID;
 
-public class App extends WebSocketServer {
+public class App extends WebSocketServer implements GameObserver {
 
-  
   public ArrayList<String> usernames = new ArrayList<String>();
   public Map<WebSocket, Player> activeConnections = new HashMap<WebSocket, Player>();
- 
+
   public Map<String, Player> activeSessions = new HashMap<String, Player>();
   public Map<String, Game> activeGames = new HashMap<String, Game>();
   public ArrayList<String> words = new ArrayList<String>();
-  public static Map<String, Map<String, Integer>> allTimeLeaderBoard = new HashMap<>(); 
+  public static Map<String, Map<String, Integer>> allTimeLeaderBoard = new HashMap<>();
   public Lobby lobby = new Lobby(allTimeLeaderBoard);
   public String id = null;
 
@@ -72,6 +71,18 @@ public class App extends WebSocketServer {
 
   public App(int port, Draft_6455 draft) {
     super(new InetSocketAddress(port), Collections.<Draft>singletonList(draft));
+  }
+
+  @Override
+  public void notifyGameEnd(Game game) {
+    JsonObject jsonObject = new JsonObject();
+    Gson gson = new Gson();
+    // prepare JSON message
+    jsonObject.addProperty("screen", "game");
+    jsonObject.addProperty("type", "endGame");
+    jsonObject.addProperty("gameId", game.gameId);
+    jsonObject.addProperty("leaderboard", gson.toJson(game.leaderboard));
+    broadcast(jsonObject.toString());
   }
 
   @Override
@@ -202,9 +213,7 @@ public class App extends WebSocketServer {
     Player newPlayer = new Player(uid);
     activeConnections.put(conn, newPlayer);
     activeSessions.put(uid, newPlayer);
-    
-    
-    
+
     lobby.updateLobby(activeGames);
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("screen", "landing");
@@ -251,7 +260,7 @@ public class App extends WebSocketServer {
           // retrieve player
           Player p = activeSessions.get(uid);
           // create new game object
-          Game G = new Game(p, words, lobby);
+          Game G = new Game(p, words, lobby, this);
           p.gameId = G.gameId;
 
           // add game to active games map and update lobby
@@ -381,7 +390,7 @@ public class App extends WebSocketServer {
           String jsonPlayer = gson.toJson(G.players.get(i));
           jsonArray.add(jsonPlayer);
         }
-        if((G.players.size() == 2 || G.players.size() == 3) && readyPlayerCount >= 2) {
+        if ((G.players.size() == 2 || G.players.size() == 3) && readyPlayerCount >= 2) {
           canStartGame = true;
         } else if (readyPlayerCount > 2) {
           canStartGame = true;
@@ -467,6 +476,7 @@ public class App extends WebSocketServer {
 
           if (g.grid.validateSelection(firstLetter, secondLetter)) {
             g.updateLeaderboard(p);
+            g.checkEndGame();
             firstLetter.selections.clear();
             secondLetter.selections.clear();
 
@@ -485,7 +495,7 @@ public class App extends WebSocketServer {
           jsonObject.addProperty("gameId", gameId);
 
           broadcast(jsonObject.toString());
-        } else if(type.equals("leaveGame")) {
+        } else if (type.equals("leaveGame")) {
           // get player that's leaving game, and the game they are leaving
           uid = message.get("uid").getAsString();
           gameId = message.get("gameId").getAsString();

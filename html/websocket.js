@@ -86,6 +86,9 @@ connection.onmessage = function(event) {
                 break;
               case "leaveGame":
                 window.updateLeaderboard(JSON.parse(msg.leaderboard));
+              case "endGame":
+                userSession.screen = "endGame"
+                window.endGame();
             }
           }
       }

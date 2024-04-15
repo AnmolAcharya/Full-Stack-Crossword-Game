@@ -1,30 +1,26 @@
 package uta.cse3310;
 
-public class GameClock{
-	private	long startTime;
+public class GameClock {
 	private	long endTime;
-    public boolean timeExceed;
 
 	public GameClock(long end) {
-        this.timeExceed = false;
+
 		this.endTime = end;
 	}
 
-	public void startTimer() {
-    	startTime = System.currentTimeMillis();
+	public void startTimer(Runnable endGame) {
+		new Thread(() -> {
+            try {
+                // Convert minutes to milliseconds and sleep
+                Thread.sleep(endTime * 60 * 1000);
+                // After the sleep duration ends, call the end game method
+                endGame.run();
+            } catch (InterruptedException e) {
+                System.out.println("Game timer was interrupted.");
+            }
+        }).start();
 	}
 
-	// Use this to get the time on a active game and check if it is over 5 minutes
-	public String getTime() {
-		long elapsedTime = System.currentTimeMillis() - startTime;
-		long elapsedSeconds = elapsedTime / 1000;
-		long second = elapsedSeconds % 60;
-		long minute = elapsedSeconds / 60;
-		if(minute >= endTime) {
-			timeExceed = true;
-		}
-		return minute + ": " + second;
-	}
 }
 
 

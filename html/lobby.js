@@ -5,6 +5,7 @@ const joinGame = document.querySelector(".joinGame");
 const gameList = document.querySelector(".gameList");
 const readyPage = document.getElementById("readyScreen");
 const gamePage = document.getElementById("gameScreen");
+const endGamePage = document.getElementById("endGameScreen");
 
 let selectedGameID = null;
 
@@ -73,6 +74,10 @@ function enterLobby() {
             gamePage.classList.add("hidden");
             lobbyPage.classList.remove("hidden");
             break
+        case "endGame":
+            endGamePage.classList.add("hidden");
+            lobbyPage.classList.remove("hidden");
+            break;
     }
     userSession.screen = "lobby";
 }

@@ -3,6 +3,7 @@ package uta.cse3310;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.Collections;
+
 public class Game {
 	
 	public String gameId;
@@ -13,10 +14,12 @@ public class Game {
 	public ArrayList<Player> leaderboard;
 	public GameClock gameClock;
 
+	private transient GameObserver observer;
+
 	private final String[] colors = {"red", "blue", "pink", "green"};
 	private final boolean[] colorInUse = new boolean[colors.length];
 	
-	public Game(Player player, ArrayList<String> words, Lobby lobby){
+	public Game(Player player, ArrayList<String> words, Lobby lobby, App app){
 		this.gameId = generateUniqueID();
 		this.gameTitle = gameId.substring(0, 4);
 		this.joinable = true;
@@ -26,8 +29,8 @@ public class Game {
 		this.players = new ArrayList<Player>();
 		this.leaderboard = players;
 		this.gameClock = new GameClock(5);
+		this.observer = app;
 
-		
 		// reset score, assign color and set color in use, the rest not in use
 		player.currentScore = 0;
 		player.color = "red";
@@ -40,7 +43,7 @@ public class Game {
 
 	public void startGame(){
 		joinable = false;
-		gameClock.startTimer();
+		gameClock.startTimer(this::endGame);
 	}
 	
 	public static String generateUniqueID() {
@@ -90,12 +93,27 @@ public class Game {
 		}
 	}
 	
-	public void checkEndGame(){}
+	public void checkEndGame() {
+		boolean allWordsFound = true;
+        
+        for (Boolean found : grid.wordBank.values()) {
+            if (!found) { // If any word is not found, set allFound to false
+                allWordsFound = false;
+                break;
+            }
+        }
+
+        if (allWordsFound) {
+            endGame();
+        }
+	}
 
 	public void endGame(){
 		for(Player player:players){
 			player.updateHighScore();
 		}
 		Lobby.updateAllTimeLeaderboard(players);
+
+		observer.notifyGameEnd(this);
 	}	
 }

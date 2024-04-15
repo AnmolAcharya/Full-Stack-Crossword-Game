@@ -2,6 +2,8 @@ const wordGrid = document.querySelector(".wordGrid");
 const wordBank = document.querySelector(".wordBank");
 const chatForm = document.querySelector('.chatForm')
 const chatInput = document.querySelector('.chatInput');
+const leaderboard = document.querySelector(".leaderboardList");
+const leaderboardEntry = leaderboard.querySelectorAll(".player");
 
 let firstSelection = null;
 let secondSelection = null;
@@ -43,8 +45,10 @@ function sendMessage() {
 function setUpGame(gameData) {
     grid = gameData.grid.grid;
     wordBankList = gameData.grid.wordBank;
+    leaderboardList = gameData.leaderboard;
     fillGrid(grid);
     fillWordBank(wordBankList);
+    updateLeaderboard(leaderboardList);
 }
 
 function fillGrid(grid) {
@@ -172,7 +176,24 @@ function updateWordBank(updatedWordBank) {
     });
 }
 
+function updateLeaderboard(updatedLeaderboard) {
+    //updatedLeaderboard = JSON.parse(updatedLeaderboard);
+    let numPlayers = updatedLeaderboard.length
+    for(let i=0; i<numPlayers; i++) {
+        let playerObject = updatedLeaderboard[i];
+        leaderboardEntry[i].id = `${playerObject.color}Player`;
+        leaderboardEntry[i].querySelector(".username").textContent = playerObject.userName;
+        leaderboardEntry[i].querySelector(".wordsFound").textContent = playerObject.currentScore;
+    }
+    for(let i=numPlayers; i<4; i++) {
+        leaderboardEntry[i].removeAttribute("id");
+        leaderboardEntry[i].querySelector(".username").textContent = "";
+        leaderboardEntry[i].querySelector(".wordsFound").textContent = "";
+    }
+}
+
 window.setUpGame = setUpGame;
 window.updateLetterSelection = updateLetterSelection;
 window.highlightWordOnGrid = highlightWordOnGrid;
 window.updateWordBank = updateWordBank;
+window.updateLeaderboard = updateLeaderboard;

@@ -82,7 +82,7 @@ public class Game {
 		Collections.sort(leaderboard,(p1,p2) -> Integer.compare(p2.currentScore, p1.currentScore));
 	}
 
-	public void updateAllTimeLeaderboard(){
+	public void updateAllTimeScores(){
 		for(int i = 0; i < players.size(); i++) {
 			players.get(i).updateHighscore();
 			//Lobby.allTimeLeaderboard.add(players.get(i).highscore);
@@ -98,6 +98,6 @@ public class Game {
 	}
 
 	public void endGame(){
-		updateAllTimeLeaderboard();
+		updateAllTimeScores();
 	}	
 }

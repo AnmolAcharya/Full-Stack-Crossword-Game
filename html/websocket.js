@@ -75,6 +75,7 @@ connection.onmessage = function(event) {
                 window.updateLetterSelection(secondLetter.coordinate[0], secondLetter.coordinate[1], secondLetter.selections);
                 window.highlightWordOnGrid(firstLetter, secondLetter, msg.playerColor);
                 window.updateWordBank(msg.wordBank);
+                window.updateLeaderboard(JSON.parse(msg.leaderboard));
                 break;
               case "invalidWord":
                 firstLetter = JSON.parse(msg.firstLetter);

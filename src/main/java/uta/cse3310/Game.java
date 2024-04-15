@@ -8,7 +8,6 @@ public class Game {
 	public String gameId;
 	public String gameTitle;
 	public boolean joinable;
-	public Lobby lobby;
 	public Grid grid;
 	public ArrayList<Player> players;
 	public ArrayList<Player> leaderboard;
@@ -21,7 +20,6 @@ public class Game {
 		this.gameId = generateUniqueID();
 		this.gameTitle = gameId.substring(0, 4);
 		this.joinable = true;
-		this.lobby = lobby;
 		this.grid = new Grid();
 		this.grid.generateWordBank(words);
 		this.grid.fillGrid(grid.wordBank);
@@ -94,10 +92,10 @@ public class Game {
 	
 	public void checkEndGame(){}
 
-	public void endGame(Lobby lobby){
+	/*public void endGame(Lobby lobby){
 		for(Player player:players){
 			player.updateHighScore();
 		}
 		lobby.updateAllTimeLeaderboard(players);
-	}	
+	}*/	
 }

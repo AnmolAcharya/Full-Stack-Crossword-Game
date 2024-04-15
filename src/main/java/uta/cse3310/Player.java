@@ -6,13 +6,13 @@ public class Player {
 	public String userName;
 	public boolean ready;
 	public String color;
-	public int highscore;
+	public int highScore;
 	public int currentScore;
 
 	public Player(String uid) {
 		this.uid = uid;
 		this.currentScore = 0;
-		this.highscore = 0;
+		this.highScore = 0;
 		this.ready = false;
 	}
 
@@ -26,8 +26,8 @@ public class Player {
 	}
 
 	// highscore treated as most words found by player among all played games in a session
-	public void updateHighscore() {
-		highscore += currentScore;
+	public void updateHighScore() {
+		highScore += currentScore;
 	}
 }
 

@@ -16,7 +16,7 @@ public class Game {
 	private final String[] colors = {"red", "blue", "pink", "green"};
 	private final boolean[] colorInUse = new boolean[colors.length];
 	
-	public Game(Player player, ArrayList<String> words){
+	public Game(Player player, ArrayList<String> words, Lobby lobby){
 		this.gameId = generateUniqueID();
 		this.gameTitle = gameId.substring(0, 4);
 		this.joinable = true;
@@ -82,13 +82,6 @@ public class Game {
 		Collections.sort(leaderboard,(p1,p2) -> Integer.compare(p2.currentScore, p1.currentScore));
 	}
 
-	public void updateAllTimeScores(){
-		for(int i = 0; i < players.size(); i++) {
-			players.get(i).updateHighscore();
-			//Lobby.allTimeLeaderboard.add(players.get(i).highscore);
-		}
-	}
-
 	public void updateJoinable() {
 		if(players.size() == 0){
 			joinable = false;
@@ -96,8 +89,13 @@ public class Game {
 			joinable = true;
 		}
 	}
+	
+	public void checkEndGame(){}
 
 	public void endGame(){
-		updateAllTimeScores();
+		for(Player player:players){
+			player.updateHighScore();
+		}
+		Lobby.updateAllTimeLeaderboard(players);
 	}	
 }

@@ -82,6 +82,7 @@ connection.onmessage = function(event) {
                 window.updateLetterSelection(firstLetter.coordinate[0], firstLetter.coordinate[1], firstLetter.selections);
                 break;
               case "chatRoom":
+                window.updateChatBox(msg.userName, msg.color, msg.textToAdd);
                 break;
             }
           }

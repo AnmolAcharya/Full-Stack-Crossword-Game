@@ -2,6 +2,7 @@ const wordGrid = document.querySelector(".wordGrid");
 const wordBank = document.querySelector(".wordBank");
 const chatForm = document.querySelector('.chatForm')
 const chatInput = document.querySelector('.chatInput');
+const chatList = document.querySelector(".messageList");
 const leaderboard = document.querySelector(".leaderboardList");
 const leaderboardEntry = leaderboard.querySelectorAll(".player");
 
@@ -33,12 +34,38 @@ chatForm.addEventListener('submit', function (e) {
 
 function sendMessage() {
     // Get message
-    const message = chatInput.value;
+    const chat = chatInput.value;
 
-    // Send message to server
+    let message = {
+        screen: "game",
+        type: "chatRoom",
+        uid: userSession.uid,
+        gameId: userSession.gameId,
+        message: chat
+    };
+    connection.send(JSON.stringify(message));
 
     // Clear message field
     chatInput.value = '';
+}
+
+// Update chat box
+function updateChatBox(username, color, message) {
+    // Create new message element
+    const messageItem = document.createElement('li');
+    messageItem.className = 'message';
+    const usernameSpan = document.createElement('span');
+    usernameSpan.className = `${color}Message`;
+    usernameSpan.textContent = `${username}: `;
+    const messageText = document.createTextNode(message);
+    messageItem.appendChild(usernameSpan);
+    messageItem.appendChild(messageText);
+
+    // Add message to chat list
+    chatList.appendChild(messageItem);
+
+    // Scroll the chat list to show the latest message
+    chatList.scrollTop = chatList.scrollHeight;
 }
 
 // Set up game (fill grid, fill word bank, reset leaderboard, reset chat, start timer)
@@ -179,13 +206,13 @@ function updateWordBank(updatedWordBank) {
 function updateLeaderboard(updatedLeaderboard) {
     //updatedLeaderboard = JSON.parse(updatedLeaderboard);
     let numPlayers = updatedLeaderboard.length
-    for(let i=0; i<numPlayers; i++) {
+    for (let i = 0; i < numPlayers; i++) {
         let playerObject = updatedLeaderboard[i];
         leaderboardEntry[i].id = `${playerObject.color}Player`;
         leaderboardEntry[i].querySelector(".username").textContent = playerObject.userName;
         leaderboardEntry[i].querySelector(".wordsFound").textContent = playerObject.currentScore;
     }
-    for(let i=numPlayers; i<4; i++) {
+    for (let i = numPlayers; i < 4; i++) {
         leaderboardEntry[i].removeAttribute("id");
         leaderboardEntry[i].querySelector(".username").textContent = "";
         leaderboardEntry[i].querySelector(".wordsFound").textContent = "";
@@ -197,3 +224,4 @@ window.updateLetterSelection = updateLetterSelection;
 window.highlightWordOnGrid = highlightWordOnGrid;
 window.updateWordBank = updateWordBank;
 window.updateLeaderboard = updateLeaderboard;
+window.updateChatBox = updateChatBox;

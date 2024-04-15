@@ -8,12 +8,12 @@ import java.util.Collections;
 public class Lobby{
 	
 	public ArrayList<Game> joinableGames;
-	public ArrayList<Player> allTimeLeaderboard;
+	public Map<String, Map<String, Integer>> allTimeLeaderboard;
 	public Map<String, ArrayList<Player>> concurrentLeaderboard;
 	
-	public Lobby(){
+	public Lobby(Map<String, Map<String, Integer>> allTimeLeaderboard){
 		this.joinableGames = new ArrayList<Game>();
-		this.allTimeLeaderboard = new ArrayList<Player>();
+		this.allTimeLeaderboard = new HashMap<String, Map<String, Integer>>();
 		this.concurrentLeaderboard = new HashMap<String, ArrayList<Player>>();
 	}
 
@@ -33,8 +33,14 @@ public class Lobby{
                 concurrentLeaderboard.put(game.gameId, game.leaderboard);
             }
         }
-
         
+    }
+    
+    
+    public void updateAllTimeLeaderboard(ArrayList<Player> players){
+    	for(Player player: players){
+    		allTimeLeaderboard.get(player.uid).put(player.userName, player.highScore);
+    	}
     }
 
 }

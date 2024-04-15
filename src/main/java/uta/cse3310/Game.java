@@ -8,6 +8,7 @@ public class Game {
 	public String gameId;
 	public String gameTitle;
 	public boolean joinable;
+	public Lobby lobby;
 	public Grid grid;
 	public ArrayList<Player> players;
 	public ArrayList<Player> leaderboard;
@@ -16,10 +17,11 @@ public class Game {
 	private final String[] colors = {"red", "blue", "pink", "green"};
 	private final boolean[] colorInUse = new boolean[colors.length];
 	
-	public Game(Player player, ArrayList<String> words){
+	public Game(Player player, ArrayList<String> words, Lobby lobby){
 		this.gameId = generateUniqueID();
 		this.gameTitle = gameId.substring(0, 4);
 		this.joinable = true;
+		this.lobby = lobby;
 		this.grid = new Grid();
 		this.grid.generateWordBank(words);
 		this.grid.fillGrid(grid.wordBank);
@@ -82,13 +84,6 @@ public class Game {
 		Collections.sort(leaderboard,(p1,p2) -> Integer.compare(p2.currentScore, p1.currentScore));
 	}
 
-	public void updateAllTimeScores(){
-		for(int i = 0; i < players.size(); i++) {
-			players.get(i).updateHighscore();
-			//Lobby.allTimeLeaderboard.add(players.get(i).highscore);
-		}
-	}
-
 	public void updateJoinable() {
 		if(players.size() == 0){
 			joinable = false;
@@ -96,8 +91,13 @@ public class Game {
 			joinable = true;
 		}
 	}
+	
+	public void checkEndGame(){}
 
-	public void endGame(){
-		updateAllTimeScores();
+	public void endGame(Lobby lobby){
+		for(Player player:players){
+			player.updateHighScore();
+		}
+		lobby.updateAllTimeLeaderboard(players);
 	}	
 }

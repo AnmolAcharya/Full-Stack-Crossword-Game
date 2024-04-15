@@ -38,13 +38,15 @@ import java.util.UUID;
 
 public class App extends WebSocketServer {
 
-  public Lobby lobby = new Lobby();
+  
   public ArrayList<String> usernames = new ArrayList<String>();
   public Map<WebSocket, Player> activeConnections = new HashMap<WebSocket, Player>();
+ 
   public Map<String, Player> activeSessions = new HashMap<String, Player>();
   public Map<String, Game> activeGames = new HashMap<String, Game>();
   public ArrayList<String> words = new ArrayList<String>();
-
+  public Map<String, Map<String, Integer>> allTimeLeaderBoard = new HashMap<>(); 
+  public Lobby lobby = new Lobby(allTimeLeaderBoard);
   public String id = null;
 
   public ArrayList<String> getWords() {
@@ -200,6 +202,9 @@ public class App extends WebSocketServer {
     Player newPlayer = new Player(uid);
     activeConnections.put(conn, newPlayer);
     activeSessions.put(uid, newPlayer);
+    
+    
+    
     lobby.updateLobby(activeGames);
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("screen", "landing");
@@ -246,7 +251,7 @@ public class App extends WebSocketServer {
           // retrieve player
           Player p = activeSessions.get(uid);
           // create new game object
-          Game G = new Game(p, words);
+          Game G = new Game(p, words, lobby);
           p.gameId = G.gameId;
 
           // add game to active games map and update lobby
@@ -480,6 +485,9 @@ public class App extends WebSocketServer {
           jsonObject.addProperty("gameId", gameId);
 
           broadcast(jsonObject.toString());
+        } else if (type.equals ("endGame")){
+        	
+        
         }
         break;
     }
@@ -492,6 +500,8 @@ public class App extends WebSocketServer {
     Player player = activeSessions.get(uid);
     player.userName = username;
     usernames.add(username);
+    allTimeLeaderBoard.put(player.uid, new HashMap<>());
+    allTimeLeaderBoard.get(player.uid).put(player.userName, 0);
     return true;
   }
 

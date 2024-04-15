@@ -21,13 +21,8 @@ public class Player {
 	}
 
 	//call with number of points to add or with 0 to reset the current score
-	public void updateScore(int points) {
-		if(points != 0) {
-			currentScore = currentScore + points;
-		}
-		else {
-			currentScore = points;
-		}
+	public void updateScore() {
+		currentScore++;
 	}
 
 	// highscore treated as most words found by player among all played games in a session

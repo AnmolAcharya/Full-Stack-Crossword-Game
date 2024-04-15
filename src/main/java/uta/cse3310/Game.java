@@ -56,6 +56,7 @@ public class Game {
                 break;
             }
         }
+		player.currentScore = 0;
 		players.add(player);
 		return;
 	}
@@ -76,8 +77,8 @@ public class Game {
 		return;
 	}
 	
-	public void updateLeaderboard(Player player, int points){
-		player.updateScore(points);
+	public void updateLeaderboard(Player player){
+		player.updateScore();
 		Collections.sort(leaderboard,(p1,p2) -> Integer.compare(p2.currentScore, p1.currentScore));
 	}
 

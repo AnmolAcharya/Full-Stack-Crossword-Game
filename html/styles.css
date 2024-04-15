@@ -570,6 +570,6 @@ button, input, li {
     right: 0;
     top: 50%;
     height: 2px;
-    background-color: red; /* Red line */
+    background-color: red;
     display: block;
 }

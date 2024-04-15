@@ -48,7 +48,6 @@ function setUpGame(gameData) {
 }
 
 function fillGrid(grid) {
-    console.log(grid);
     for (let row = 0; row < 20; row++) {
         for (let col = 0; col < 20; col++) {
             const gridItem = document.createElement('div');
@@ -81,27 +80,22 @@ function fillWordBank(wordBankList) {
 
 wordGrid.addEventListener('click', function (event) {
     if (event.target.classList.contains('gridItem')) {
-        console.log(event.target);
         if (!firstSelection) {
             firstSelection = event.target;
             sendLetterSelection(firstSelection.dataset.x, firstSelection.dataset.y);
             //event.target.classList.add('selected'); // Visually mark the item
         } else if (!secondSelection && event.target !== firstSelection) {
             secondSelection = event.target;
-            //event.target.classList.add('selected'); // Visually mark the item
-            //sendSelectionToServer(firstSelection, secondSelection);
-            //resetSelections();
+            sendWordSelection(firstSelection, secondSelection);
+            resetSelections();
         }
     }
 });
 
-// function resetSelections() {
-//     document.querySelectorAll('.grid-item.selected').forEach(item => {
-//         item.classList.remove('selected');
-//     });
-//     firstSelection = null;
-//     secondSelection = null;
-// }
+function resetSelections() {
+    firstSelection = null;
+    secondSelection = null;
+}
 
 function sendLetterSelection(xCoordinate, yCoordinate) {
     let message = {
@@ -120,7 +114,8 @@ function sendWordSelection(firstLetter, secondLetter) {
         type: "validateWord",
         uid: userSession.uid,
         gameId: userSession.gameId,
-        letterCoordinate: [xCoordinate, yCoordinate]
+        firstCoordinate: [firstLetter.dataset.x, firstLetter.dataset.y],
+        secondCoordinate: [secondLetter.dataset.x, secondLetter.dataset.y]
     };
     connection.send(JSON.stringify(message));
 }
@@ -143,20 +138,41 @@ function updateLetterSelection(xCoordinate, yCoordinate, selections) {
     gridItem.style.boxShadow = boxShadowValue;
 }
 
-function highlightWordOnGrid(firstCoord, secondCoord) {
-    // Assuming row-major order and 1D transformation of coordinates
-    const startX = Math.min(firstCoord.x, secondCoord.x);
-    const endX = Math.max(firstCoord.x, secondCoord.x);
-    const startY = Math.min(firstCoord.y, secondCoord.y);
-    const endY = Math.max(firstCoord.y, secondCoord.y);
+function highlightWordOnGrid(firstLetter, secondLetter, playerColor) {
+    let color = colorMap.get(playerColor);
 
-    for (let x = startX; x <= endX; x++) {
-        for (let y = startY; y <= endY; y++) {
-            const elementId = `grid-item-${x}-${y}`;
-            document.getElementById(elementId).classList.add('highlighted');
-        }
+    const startX = firstLetter.coordinate[0];
+    const startY = firstLetter.coordinate[1];
+    const endX = secondLetter.coordinate[0];
+    const endY = secondLetter.coordinate[1];
+
+    const stepX = startX === endX ? 0 : (endX > startX ? 1 : -1);
+    const stepY = startY === endY ? 0 : (endY > startY ? 1 : -1);
+
+    let x = startX;
+    let y = startY;
+
+    while (x !== endX + stepX || y !== endY + stepY) {
+        const gridId = `gridItem-${x}-${y}`;
+        const gridItem = document.getElementById(gridId);
+        gridItem.style.backgroundColor = `${color}`;
+        gridItem.style.pointerEvents = 'none';
+        x += stepX;
+        y += stepY;
     }
+}
+
+function updateWordBank(updatedWordBank) {
+    updatedWordBank = JSON.parse(updatedWordBank);
+    Object.keys(updatedWordBank).forEach(word => {
+        const wordElement = document.getElementById(word);
+        if (updatedWordBank[word]) {
+            wordElement.classList.add('strikeThrough');
+        }
+    });
 }
 
 window.setUpGame = setUpGame;
 window.updateLetterSelection = updateLetterSelection;
+window.highlightWordOnGrid = highlightWordOnGrid;
+window.updateWordBank = updateWordBank;

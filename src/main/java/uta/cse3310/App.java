@@ -376,16 +376,16 @@ public class App extends WebSocketServer {
           String jsonPlayer = gson.toJson(G.players.get(i));
           jsonArray.add(jsonPlayer);
         }
-        if(G.players.size() == 2 && readyPlayerCount == 2) {
+        if (G.players.size() == 2 && readyPlayerCount == 2) {
           canStartGame = true;
-        } else if(readyPlayerCount >2) {
+        } else if (readyPlayerCount > 2) {
           canStartGame = true;
         }
-        if(canStartGame) {
+        if (canStartGame) {
           G.startGame();
           jsonObject.addProperty("gameData", gson.toJson(G));
         }
-        
+
         jsonObject.addProperty("start", canStartGame);
         jsonObject.addProperty("players", gson.toJson(jsonArray));
         jsonObject.addProperty("gameId", G.gameId);
@@ -434,6 +434,51 @@ public class App extends WebSocketServer {
           jsonObject.addProperty("type", "letterSelection");
           jsonObject.addProperty("gameId", gameId);
           jsonObject.addProperty("letter", gson.toJson(letter));
+          broadcast(jsonObject.toString());
+
+        } else if (type.equals("validateWord")) {
+          uid = message.get("uid").getAsString();
+          gameId = message.get("gameId").getAsString();
+          ArrayList<Integer> firstCoordinate = new ArrayList<Integer>();
+          ArrayList<Integer> secondCoordinate = new ArrayList<Integer>();
+          jsonArray = new JsonArray();
+          jsonArray = message.get("firstCoordinate").getAsJsonArray();
+          for (JsonElement jsonElement : jsonArray) {
+            firstCoordinate.add(jsonElement.getAsInt());
+          }
+          jsonArray = new JsonArray();
+          jsonArray = message.get("secondCoordinate").getAsJsonArray();
+          for (JsonElement jsonElement : jsonArray) {
+            secondCoordinate.add(jsonElement.getAsInt());
+          }
+          Player p = activeSessions.get(uid);
+          Game g = activeGames.get(gameId);
+
+          Letter firstLetter = g.grid.grid[firstCoordinate.get(1)][firstCoordinate.get(0)];
+          Letter secondLetter = g.grid.grid[secondCoordinate.get(1)][secondCoordinate.get(0)];
+
+          jsonObject = new JsonObject();
+          jsonObject.addProperty("screen", "game");
+
+          if (g.grid.validateSelection(firstLetter, secondLetter)) {
+            g.updateLeaderboard(p);
+            firstLetter.selections.clear();
+            secondLetter.selections.clear();
+
+            jsonObject.addProperty("type", "validWord");
+            jsonObject.addProperty("firstLetter", gson.toJson(firstLetter));
+            jsonObject.addProperty("secondLetter", gson.toJson(secondLetter));
+            jsonObject.addProperty("wordBank", gson.toJson(g.grid.wordBank));
+            jsonObject.addProperty("leaderboard", gson.toJson(g.leaderboard));
+            jsonObject.addProperty("playerColor", p.color);
+          } else {
+            firstLetter.selections.remove(p);
+            jsonObject.addProperty("type", "invalidWord");
+            jsonObject.addProperty("firstLetter", gson.toJson(firstLetter));
+          }
+
+          jsonObject.addProperty("gameId", gameId);
+
           broadcast(jsonObject.toString());
         }
         break;

@@ -5,6 +5,7 @@ let userSession = {
     uid: null,
     username: null,
     gameId: null,
+    color: null,
     screen: "landing"
 };
 
@@ -58,16 +59,26 @@ connection.onmessage = function(event) {
           break;
         case "game":
           if(userSession.gameId == msg.gameId) {
+            let firstLetter;
+            let secondLetter;
             switch(msg.type) {
               case "letterSelection":
-                let letter = JSON.parse(msg.letter)
-                //let letterSelections = JSON.parse(letter.selections)
-                let letterSelections = letter.selections;
-                updateLetterSelection(letter.coordinate[0], letter.coordinate[1], letterSelections);
+                firstLetter = JSON.parse(msg.letter)
+                let letterSelections = firstLetter.selections;
+                window.updateLetterSelection(firstLetter.coordinate[0], firstLetter.coordinate[1], letterSelections);
                 break;
               case "validWord":
+                firstLetter = JSON.parse(msg.firstLetter);
+                secondLetter = JSON.parse(msg.secondLetter);
+                
+                window.updateLetterSelection(firstLetter.coordinate[0], firstLetter.coordinate[1], firstLetter.selections);
+                window.updateLetterSelection(secondLetter.coordinate[0], secondLetter.coordinate[1], secondLetter.selections);
+                window.highlightWordOnGrid(firstLetter, secondLetter, msg.playerColor);
+                window.updateWordBank(msg.wordBank);
                 break;
               case "invalidWord":
+                firstLetter = JSON.parse(msg.firstLetter);
+                window.updateLetterSelection(firstLetter.coordinate[0], firstLetter.coordinate[1], firstLetter.selections);
                 break;
               case "chatRoom":
                 break;

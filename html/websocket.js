@@ -57,6 +57,21 @@ connection.onmessage = function(event) {
           }
           break;
         case "game":
-          break;
+          if(userSession.gameId == msg.gameId) {
+            switch(msg.type) {
+              case "letterSelection":
+                let letter = JSON.parse(msg.letter)
+                //let letterSelections = JSON.parse(letter.selections)
+                let letterSelections = letter.selections;
+                updateLetterSelection(letter.coordinate[0], letter.coordinate[1], letterSelections);
+                break;
+              case "validWord":
+                break;
+              case "invalidWord":
+                break;
+              case "chatRoom":
+                break;
+            }
+          }
       }
   };

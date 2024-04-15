@@ -101,20 +101,19 @@ public class App extends WebSocketServer {
     System.out.println(conn + " has closed");
     Player disconectedPlayer = activeConnections.get(conn);
 
-    
     // remove player from server
     activeConnections.remove(conn);
     activeSessions.remove(disconectedPlayer.uid);
     // remove players username from list
     usernames.remove(disconectedPlayer.userName);
-    
+
     System.out.println(disconectedPlayer + " removed"); // removed username from list
-    
+
     Gson gson = new Gson();
     JsonObject jsonObject = new JsonObject();
     JsonArray jsonArray = new JsonArray();
-    
-    if(disconectedPlayer.gameId != null){
+
+    if (disconectedPlayer.gameId != null) {
       Game G = activeGames.get(disconectedPlayer.gameId);
       // remove player from game and update joinability
       G.removePlayer(disconectedPlayer);
@@ -132,7 +131,7 @@ public class App extends WebSocketServer {
       } else {
         jsonObject.addProperty("function", "remove");
       }
-  
+
       // if no players in game
       if (G.players.size() == 0) {
         // obliterate game from existence
@@ -141,14 +140,14 @@ public class App extends WebSocketServer {
       }
 
     }
-    
+
     // prepare JSON message
     jsonObject.addProperty("screen", "lobby");
     jsonObject.addProperty("type", "updateGameList");
     jsonObject.addProperty("uid", disconectedPlayer.uid);
     jsonObject.addProperty("userState", "leave");
     jsonObject.addProperty("gameId", disconectedPlayer.gameId);
-    
+
     // broadcast JSON message
     broadcast(jsonObject.toString());
 
@@ -414,6 +413,28 @@ public class App extends WebSocketServer {
           System.out.println(jsonObject.toString());
           broadcast(jsonObject.toString());
 
+        } else if (type.equals("letterSelection")) {
+          uid = message.get("uid").getAsString();
+          gameId = message.get("gameId").getAsString();
+          ArrayList<Integer> letterCoordinate = new ArrayList<Integer>();
+          jsonArray = new JsonArray();
+          jsonArray = message.get("letterCoordinate").getAsJsonArray();
+          for (JsonElement jsonElement : jsonArray) {
+            letterCoordinate.add(jsonElement.getAsInt());
+          }
+          Player p = activeSessions.get(uid);
+          Game g = activeGames.get(gameId);
+
+          // add player to letters selections list
+          Letter letter = g.grid.grid[letterCoordinate.get(1)][letterCoordinate.get(0)];
+          letter.selections.add(p);
+
+          jsonObject = new JsonObject();
+          jsonObject.addProperty("screen", "game");
+          jsonObject.addProperty("type", "letterSelection");
+          jsonObject.addProperty("gameId", gameId);
+          jsonObject.addProperty("letter", gson.toJson(letter));
+          broadcast(jsonObject.toString());
         }
         break;
     }

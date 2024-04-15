@@ -525,19 +525,20 @@ button, input, li {
 }
 
 .gridItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     box-sizing: border-box;
     background-color: white;
     color: black;
     font-size: 1.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     user-select: none;
     cursor: pointer;
     background-clip: padding-box;
     aspect-ratio: 1/1;
     border: 1px solid black;
     max-height: 32px;
+    background-clip: padding-box;
 }
 
 .wordBank {
@@ -556,4 +557,19 @@ button, input, li {
     color: black;
     margin: 0;
     padding: 8px;
+}
+
+.strikeThrough {
+    position: relative;
+}
+
+.strikeThrough::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    background-color: red; /* Red line */
+    display: block;
 }

@@ -43,7 +43,8 @@ exitButton.addEventListener('click', () => {
 function enterGame(gameData) {
     readyPage.classList.add("hidden");
     gamePage.classList.remove("hidden");
-    console.log(gameData);
+    userSession.screen = "game";
+    window.setUpGame(gameData);
 }
 
 function resetPlayerDiv(playerDiv) {
@@ -82,6 +83,10 @@ function updateReadyScreen(players, canStart, gameData) {
 
         for (let j = 0; j < players.length; j++) {
             playerObject = JSON.parse(players[i]);
+            // set player color for game
+            if(userSession.uid == playerObject.uid) {
+                userSession.color = playerObject.color;
+            }
             playerDiv.dataset.uid = playerObject.uid;
             playerBubble.id = playerObject.color + "Player";
             playeName.innerHTML = playerObject.userName;

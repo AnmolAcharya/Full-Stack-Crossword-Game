@@ -284,8 +284,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(q<0)
                         return false;
-                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
-                        return false;
+                    if((this.grid[q][p].letter!=' ')) return false;
                     q--;
                 }
                 break;
@@ -293,8 +292,7 @@ public class Grid{
                 for(int i = 0; i< word.length; i++){
                     if(q>19)
                         return false;
-                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
-                        return false;
+                        if((this.grid[q][p].letter!=' ')) return false;
                     q++;
                 }
                 break;
@@ -302,8 +300,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(p>19)
                         return false;
-                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
-                        return false;
+                    if((this.grid[q][p].letter!=' ')) return false;
                     p++;
                 }
                 break;
@@ -311,8 +308,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(p<0)
                         return false;
-                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
-                        return false;
+                    if((this.grid[q][p].letter!=' ')) return false;
                     p--;
                 }
                 break;
@@ -320,8 +316,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(p<0||q<0)
                         return false;
-                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
-                        return false;
+                    if((this.grid[q][p].letter!=' ')) return false;
                     p--;
                     q--;
                 }
@@ -330,8 +325,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(p<0||q>19)
                         return false;
-                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
-                        return false;
+                    if((this.grid[q][p].letter!=' ')) return false;
                     p--;
                     q++;
                 }
@@ -340,8 +334,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(p>19||q<0)
                         return false;
-                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
-                        return false;
+                    if((this.grid[q][p].letter!=' ')) return false;
                     p++;
                     q--;
                 }
@@ -350,8 +343,7 @@ public class Grid{
                 for(int i = 0; i < word.length; i++){
                     if(p>19||q>19)
                         return false;
-                    if((this.grid[q][p].letter!=' ')&&(!(this.grid[q][p].letter == word[i])))
-                        return false;
+                    if((this.grid[q][p].letter!=' ')) return false;
                     p++;
                     q++;
                 }

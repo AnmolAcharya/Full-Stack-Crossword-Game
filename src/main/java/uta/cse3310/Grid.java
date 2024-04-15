@@ -48,6 +48,17 @@ public class Grid{
             }
         }
 	}
+
+    public boolean clearGrid(){
+        for(int i = 0; i < 20; i++){
+            for(int j = 0; j < 20; j++){
+                Letter l =  new Letter(' ',0,0);
+                this.grid[i][j] = l;
+            }
+        }
+        return true;
+    }
+
 	//validates that a word is a correct selection
 	//but it doesn't validate that the word itself is in the word bank	
 	public boolean validateSelection(Letter first, Letter last){

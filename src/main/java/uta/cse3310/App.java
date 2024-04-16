@@ -82,6 +82,9 @@ public class App extends WebSocketServer implements GameObserver {
     jsonObject.addProperty("type", "endGame");
     jsonObject.addProperty("gameId", game.gameId);
     jsonObject.addProperty("leaderboard", gson.toJson(game.leaderboard));
+    
+    activeGames.remove(game);
+    game = null;
     broadcast(jsonObject.toString());
   }
 
@@ -104,6 +107,7 @@ public class App extends WebSocketServer implements GameObserver {
     String jsonString;
     jsonString = gson.toJson("New Server Connection");
     handleNewConnection(conn, gson);
+    
 
     broadcast(jsonString);
 

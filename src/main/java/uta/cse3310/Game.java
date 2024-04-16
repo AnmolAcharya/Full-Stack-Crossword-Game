@@ -111,8 +111,13 @@ public class Game {
 	public void endGame(){
 		for(Player player:players){
 			player.updateHighScore();
+			
 		}
 		Lobby.updateAllTimeLeaderboard(players);
+		for(Player player:players){
+			players.remove(player);
+			
+		}
 
 		observer.notifyGameEnd(this);
 	}	

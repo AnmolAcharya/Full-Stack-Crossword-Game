@@ -235,6 +235,16 @@ public class App extends WebSocketServer implements GameObserver {
     jsonObject.addProperty("uid", uid);
     jsonObject.addProperty("lobby", gson.toJson(lobby));
     // Send UID and lobby info to the client
+    
+    
+ 	//sends alltimeleaderboard updatyes for new players
+    JsonObject jsonSObject = new JsonObject();
+ 
+    jsonSObject.addProperty("screen", "lobby");
+    jsonSObject.addProperty("type", "updateAllTimeLeaderboard");
+    jsonSObject.addProperty("leaderboard", gson.toJson(lobby.allTimeLeaderboard));
+    broadcast(jsonSObject.toString());
+    conn.send(jsonSObject.toString());
     conn.send(jsonObject.toString());
   }
 

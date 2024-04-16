@@ -376,6 +376,7 @@ button, input, li {
 .leftControl .topControls {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     margin-bottom: 8px;
 }
 
@@ -386,6 +387,7 @@ button, input, li {
     font-weight: 400;
     border: none;
     cursor: pointer;
+    margin-top: 8px;
 }
 
 .exitButton:hover {
@@ -471,6 +473,8 @@ button, input, li {
 .message {
     padding: 8px;
     font-size: 1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .redMessage {

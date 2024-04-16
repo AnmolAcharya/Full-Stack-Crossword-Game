@@ -75,7 +75,7 @@ public class Game {
 
 		// reset player to not ready
 		player.ready = false;
-
+		player.gameId = null;
 		players.remove(player);
 		return;
 	}
@@ -114,10 +114,8 @@ public class Game {
 			
 		}
 		Lobby.updateAllTimeLeaderboard(players);
-		for(Player player:players){
-			players.remove(player);
-			
-		}
+		
+		players.clear();
 
 		observer.notifyGameEnd(this);
 	}	

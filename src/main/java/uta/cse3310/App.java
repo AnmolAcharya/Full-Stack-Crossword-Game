@@ -82,8 +82,8 @@ public class App extends WebSocketServer implements GameObserver {
     jsonObject.addProperty("type", "endGame");
     jsonObject.addProperty("gameId", game.gameId);
     jsonObject.addProperty("leaderboard", gson.toJson(game.leaderboard));
-    
-    activeGames.remove(game);
+    // liquitate the game, then dump it into the ocean to never be heard of again
+    activeGames.remove(game.gameId);
     game = null;
     broadcast(jsonObject.toString());
   }
@@ -505,15 +505,16 @@ public class App extends WebSocketServer implements GameObserver {
           gameId = message.get("gameId").getAsString();
           Player p = activeSessions.get(uid);
           Game g = activeGames.get(gameId);
-          p.gameId = null;
-
+          
           // remove player from game
           g.removePlayer(p);
+          p.gameId = null;
 
           jsonObject = new JsonObject();
           // prepare JSON message
           jsonObject.addProperty("screen", "game");
           jsonObject.addProperty("type", "leaveGame");
+          jsonObject.addProperty("uid", p.uid);
           jsonObject.addProperty("gameId", g.gameId);
           jsonObject.addProperty("leaderboard", gson.toJson(g.leaderboard));
 

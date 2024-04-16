@@ -33,6 +33,7 @@ exitGameButton.addEventListener('click', () => {
 
     // update user state
     userSession.gameId = null;
+    resetGame();
     window.enterLobby();
 })
 
@@ -91,6 +92,12 @@ function updateChatBox(username, color, message) {
     chatList.scrollTop = chatList.scrollHeight;
 }
 
+function clearChatBox() {
+    while (chatList.firstChild) {
+        chatList.removeChild(chatList.firstChild);
+    }
+}
+
 // Set up game (fill grid, fill word bank, reset leaderboard, reset chat, start timer)
 function setUpGame(gameData) {
     grid = gameData.grid.grid;
@@ -105,6 +112,7 @@ function setUpGame(gameData) {
 function startTimer() {
     const endTime = Date.now() + 300 * 1000;
     updateTimer(endTime);
+    console.log(userSession.color);
 }
 
 function updateTimer(endTime) {
@@ -117,6 +125,12 @@ function updateTimer(endTime) {
         setTimeout(() => updateTimer(endTime), 500);
     } else {
         gameTimer.textContent = "0:00";
+    }
+}
+
+function clearGrid() {
+    while(wordGrid.firstChild) {
+        wordGrid.removeChild(wordGrid.firstChild);
     }
 }
 
@@ -264,9 +278,17 @@ function updateLeaderboard(updatedLeaderboard) {
     })
 }
 
+function resetGame() {
+    clearGrid()
+    clearWordBank();
+    clearChatBox();
+}
+
 function endGame() {
     gamePage.classList.add("hidden");
     endGamePage.classList.remove("hidden");
+    userSession.gameId = null;
+    resetGame();
 }
 
 window.setUpGame = setUpGame;
@@ -276,3 +298,4 @@ window.updateWordBank = updateWordBank;
 window.updateLeaderboard = updateLeaderboard;
 window.updateChatBox = updateChatBox;
 window.endGame = endGame;
+window.resetGame = resetGame;

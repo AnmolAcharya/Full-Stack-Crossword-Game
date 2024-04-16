@@ -99,6 +99,9 @@ function updateReadyScreen(players, canStart, gameData) {
     }
 
     if(canStart) {
+        readyButton.classList.remove("ready");
+        readyButton.innerHTML = "Ready"
+        resetPlayerDivs(joinedPlayers, 4);
         enterGame(gameData);
     }
 }

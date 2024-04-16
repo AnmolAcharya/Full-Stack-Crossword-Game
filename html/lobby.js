@@ -107,6 +107,8 @@ function removePlayerFromGame(uid, gameId, players) {
     // checks if user id is matching, then removes from game and enters lobby
     if (userSession.uid == uid) {
         userSession.gameId = null;
+        readyButton.classList.remove("ready");
+        readyButton.innerHTML = "Ready"
         enterLobby();
     }
 

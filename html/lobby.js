@@ -1,5 +1,4 @@
 const allTimeList = document.querySelector(".allTimeList");
-
 const createGame = document.querySelector(".createGame");
 const joinGame = document.querySelector(".joinGame");
 const gameList = document.querySelector(".gameList");
@@ -228,7 +227,28 @@ function updateGames(msg) {
     }
 }
 
+function updateAllTimeLeaderboard(updatedLeaderboard) {
+    // clear current leaderboard
+    allTimeList.innerHTML = "";
+
+    // add each entry into leaderboard
+    updatedLeaderboard.forEach(entry => {
+        let listItem = document.createElement('li');
+        listItem.className = 'leaderListItem';
+        listItem.textContent = entry.key;
+
+        let scoreSpan = document.createElement('span');
+        scoreSpan.className = 'wordsFound';
+        scoreSpan.textContent = entry.value;
+        listItem.appendChild(scoreSpan);
+
+        // add element to list
+        allTimeList.appendChild(listItem);
+    });
+}
+
 window.updateGames = updateGames;
 window.addGameToList = addGameToList;
 window.removeGameFromList = removeGameFromList;
 window.enterLobby = enterLobby;
+window.updateAllTimeLeaderboard = updateAllTimeLeaderboard;

@@ -39,7 +39,8 @@ connection.onmessage = function(event) {
               window.updateGames(msg);
               break;
             case "updateAllTimeLeaderboard":
-
+              let allTimeLeaderboard = JSON.parse(msg.leaderboard)
+              window.updateAllTimeLeaderboard(allTimeLeaderboard);
               break;
             case "updateConcurrentLeaderboard":
 
@@ -86,6 +87,10 @@ connection.onmessage = function(event) {
                 break;
               case "leaveGame":
                 window.updateLeaderboard(JSON.parse(msg.leaderboard));
+                if(userSession.uid == msg.uid) {
+                  userSession.gameId == null;
+                  window.resetGame();
+                }
                 break;
               case "endGame":
                 userSession.screen = "endGame";

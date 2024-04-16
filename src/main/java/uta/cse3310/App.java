@@ -44,8 +44,7 @@ public class App extends WebSocketServer implements GameObserver {
   public Map<String, Player> activeSessions = new HashMap<String, Player>();
   public Map<String, Game> activeGames = new HashMap<String, Game>();
   public ArrayList<String> words = new ArrayList<String>();
-  public static Map<String, Map<String, Integer>> allTimeLeaderBoard = new HashMap<>();
-  public Lobby lobby = new Lobby(allTimeLeaderBoard);
+  public Lobby lobby = new Lobby();
   public String id = null;
 
   public ArrayList<String> getWords() {
@@ -82,10 +81,21 @@ public class App extends WebSocketServer implements GameObserver {
     jsonObject.addProperty("type", "endGame");
     jsonObject.addProperty("gameId", game.gameId);
     jsonObject.addProperty("leaderboard", gson.toJson(game.leaderboard));
+    broadcast(jsonObject.toString());
+
+    // update all time leaderboard
+    System.out.println(game.leaderboard);
+    lobby.updateAllTimeLeaderboard(game.leaderboard);
+    jsonObject = new JsonObject();
+    // prepare JSON message
+    jsonObject.addProperty("screen", "lobby");
+    jsonObject.addProperty("type", "updateAllTimeLeaderboard");
+    jsonObject.addProperty("leaderboard", gson.toJson(lobby.allTimeLeaderboard));
+    broadcast(jsonObject.toString());
+
     // liquitate the game, then dump it into the ocean to never be heard of again
     activeGames.remove(game.gameId);
     game = null;
-    broadcast(jsonObject.toString());
   }
 
   @Override
@@ -505,7 +515,7 @@ public class App extends WebSocketServer implements GameObserver {
           gameId = message.get("gameId").getAsString();
           Player p = activeSessions.get(uid);
           Game g = activeGames.get(gameId);
-          
+
           // remove player from game
           g.removePlayer(p);
           p.gameId = null;
@@ -539,8 +549,6 @@ public class App extends WebSocketServer implements GameObserver {
     Player player = activeSessions.get(uid);
     player.userName = username;
     usernames.add(username);
-    allTimeLeaderBoard.put(player.uid, new HashMap<>());
-    allTimeLeaderBoard.get(player.uid).put(player.userName, 0);
     return true;
   }
 

@@ -3,25 +3,32 @@ package uta.cse3310;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Collections;
+import java.util.PriorityQueue;
+import java.util.AbstractMap;
 
-public class Lobby{
-	
-	public ArrayList<Game> joinableGames;
-	public Map<String, Map<String, Integer>> allTimeLeaderboard;
-	public Map<String, ArrayList<Player>> concurrentLeaderboard;
-	
-	public Lobby(Map<String, Map<String, Integer>> allTimeLeaderboard){
-		this.joinableGames = new ArrayList<Game>();
-		this.allTimeLeaderboard = new HashMap<String, Map<String, Integer>>();
-		this.concurrentLeaderboard = new HashMap<String, ArrayList<Player>>();
-	}
+public class Lobby {
 
-	// Method to update joinable games and concurrent leaderboard
+    public ArrayList<Game> joinableGames;
+    public transient PriorityQueue<Map.Entry<String, Integer>> leaderboardSortingQueue;
+    public transient Map<String, Integer> allTimeScores; // Map from user ID to score
+    public transient Map<String, String> userIdToUsername; // Map from user ID to username
+    public ArrayList<Map.Entry<String, Integer>> allTimeLeaderboard;
+    public Map<String, ArrayList<Player>> concurrentLeaderboard;
+
+    public Lobby() {
+        this.joinableGames = new ArrayList<Game>();
+        this.allTimeScores = new HashMap<>();
+        this.userIdToUsername = new HashMap<>();
+        this.leaderboardSortingQueue = new PriorityQueue<>(20, (a, b) -> b.getValue().compareTo(a.getValue()));
+        this.allTimeLeaderboard = new ArrayList<Map.Entry<String, Integer>>();
+        this.concurrentLeaderboard = new HashMap<String, ArrayList<Player>>();
+    }
+
+    // Method to update joinable games and concurrent leaderboard
     public void updateLobby(Map<String, Game> activeGames) {
         joinableGames.clear();
         concurrentLeaderboard.clear();
-        //Collections.sort(allTimeLeaderboard,(p1,p2)-> p1.highscore-p2.highscore);
+        // Collections.sort(allTimeLeaderboard,(p1,p2)-> p1.highscore-p2.highscore);
 
         for (Map.Entry<String, Game> entry : activeGames.entrySet()) {
             Game game = entry.getValue();
@@ -29,20 +36,40 @@ public class Lobby{
                 // If game is joinable add it to the list of joinable games
                 joinableGames.add(game);
             } else {
-                // If game is not joinable add its leaderboard info to the concurrent leaderboard
+                // If game is not joinable add its leaderboard info to the concurrent
+                // leaderboard
                 concurrentLeaderboard.put(game.gameId, game.leaderboard);
             }
         }
-        
+
     }
-    
-    
-    public static void updateAllTimeLeaderboard(ArrayList<Player> players){
-    	for(Player player: players){
-    		App.allTimeLeaderBoard.get(player.uid).put(player.userName, player.highScore);
-    	}
+
+    public void updateAllTimeLeaderboard(ArrayList<Player> players) {
+        for (Player player : players) {
+            allTimeScores.put(player.uid, player.highScore);
+            userIdToUsername.put(player.uid, player.userName);
+        }
+
+        // clear old entries, and reinsert with new entries
+        leaderboardSortingQueue.clear();
+        leaderboardSortingQueue.addAll(allTimeScores.entrySet());
+
+        // only keep the top 20 scores
+        while (leaderboardSortingQueue.size() > 20) {
+            leaderboardSortingQueue.poll();
+        }
+
+        // add updated list to allTimeLeaderboard with the username as the key
+        allTimeLeaderboard.clear();
+        while (!leaderboardSortingQueue.isEmpty()) {
+            Map.Entry<String, Integer> entry = leaderboardSortingQueue.poll();
+            String username = userIdToUsername.get(entry.getKey());
+            allTimeLeaderboard.add(new AbstractMap.SimpleEntry<>(username, entry.getValue()));
+        }
+
+        // sort this list by scores in descending order
+        allTimeLeaderboard.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
     }
 
 }
-
-

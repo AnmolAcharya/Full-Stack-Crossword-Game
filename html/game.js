@@ -110,7 +110,8 @@ function setUpGame(gameData) {
 }
 
 function startTimer() {
-    const endTime = Date.now() + 300 * 1000;
+    gameTimer.textContent = "1:00";
+    const endTime = Date.now() + 60 * 1000;
     updateTimer(endTime);
     console.log(userSession.color);
 }

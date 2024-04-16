@@ -28,7 +28,7 @@ public class Game {
 		this.grid.fillGrid(grid.wordBank);
 		this.players = new ArrayList<Player>();
 		this.leaderboard = players;
-		this.gameClock = new GameClock(5);
+		this.gameClock = new GameClock(1);
 		this.observer = app;
 
 		// reset score, assign color and set color in use, the rest not in use
@@ -76,6 +76,7 @@ public class Game {
 		// reset player to not ready
 		player.ready = false;
 		player.gameId = null;
+		player.currentScore = 0;
 		players.remove(player);
 		return;
 	}
@@ -111,12 +112,10 @@ public class Game {
 	public void endGame(){
 		for(Player player:players){
 			player.updateHighScore();
-			
+			player.gameId = null;
+			player.ready = false;
 		}
-		Lobby.updateAllTimeLeaderboard(players);
 		
-		players.clear();
-
 		observer.notifyGameEnd(this);
 	}	
 }

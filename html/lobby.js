@@ -231,15 +231,17 @@ function updateAllTimeLeaderboard(updatedLeaderboard) {
     // clear current leaderboard
     allTimeList.innerHTML = "";
 
+    console.log(updatedLeaderboard);
+
     // add each entry into leaderboard
     updatedLeaderboard.forEach(entry => {
         let listItem = document.createElement('li');
         listItem.className = 'leaderListItem';
-        listItem.textContent = entry.key;
+        listItem.textContent = entry.username;
 
         let scoreSpan = document.createElement('span');
         scoreSpan.className = 'wordsFound';
-        scoreSpan.textContent = entry.value;
+        scoreSpan.textContent = entry.score;
         listItem.appendChild(scoreSpan);
 
         // add element to list

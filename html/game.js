@@ -111,7 +111,7 @@ function setUpGame(gameData) {
 
 function startTimer() {
     gameTimer.textContent = "1:00";
-    const endTime = Date.now() + 300 * 1000;
+    const endTime = Date.now() + 60 * 1000;
     updateTimer(endTime);
 }
 

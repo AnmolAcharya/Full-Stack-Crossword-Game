@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.AbstractMap;
+import java.util.Comparator;
 
 public class Lobby {
 
@@ -12,7 +13,7 @@ public class Lobby {
     public transient PriorityQueue<Map.Entry<String, Integer>> leaderboardSortingQueue;
     public transient Map<String, Integer> allTimeScores; // Map from user ID to score
     public transient Map<String, String> userIdToUsername; // Map from user ID to username
-    public ArrayList<Map.Entry<String, Integer>> allTimeLeaderboard;
+    public ArrayList<AllTimeLeaderboardEntry> allTimeLeaderboard;
     public Map<String, ArrayList<Player>> concurrentLeaderboard;
 
     public Lobby() {
@@ -20,7 +21,7 @@ public class Lobby {
         this.allTimeScores = new HashMap<>();
         this.userIdToUsername = new HashMap<>();
         this.leaderboardSortingQueue = new PriorityQueue<>(20, (a, b) -> b.getValue().compareTo(a.getValue()));
-        this.allTimeLeaderboard = new ArrayList<Map.Entry<String, Integer>>();
+        this.allTimeLeaderboard = new ArrayList<AllTimeLeaderboardEntry>();
         this.concurrentLeaderboard = new HashMap<String, ArrayList<Player>>();
     }
 
@@ -63,11 +64,12 @@ public class Lobby {
         while (!leaderboardSortingQueue.isEmpty()) {
             Map.Entry<String, Integer> entry = leaderboardSortingQueue.poll();
             String username = userIdToUsername.get(entry.getKey());
-            allTimeLeaderboard.add(new AbstractMap.SimpleEntry<>(username, entry.getValue()));
+            // allTimeLeaderboard.add(new AbstractMap.SimpleEntry<>(username, entry.getValue()));
+            allTimeLeaderboard.add(new AllTimeLeaderboardEntry(username, entry.getValue()));
         }
 
         // sort this list by scores in descending order
-        allTimeLeaderboard.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+        allTimeLeaderboard.sort((a, b) -> b.score.compareTo(a.score));
 
     }
 

@@ -26,7 +26,7 @@ connection.onmessage = function(event) {
           switch(msg.type) {
             case "newSession":
               window.setUserId(msg.uid);
-              window.updateLobby(msg.lobby);
+              window.updateLobby(msg.lobby, msg.allTimeLeaderboard);
               break;
             case "validateUsername":
               window.checkValidationMessage(msg.valid, msg.uid, msg.username);
@@ -52,6 +52,7 @@ connection.onmessage = function(event) {
           if(msg.start) {
             gameData = JSON.parse(msg.gameData);
             window.removeGameFromList(gameData);
+            window.manageConcurrentLeaderboard(msg.gameId, gameData.leaderboard, "add");
           }
           if(userSession.gameId == msg.gameId) {
             let playersArray = JSON.parse(msg.players, msg.start);
@@ -59,6 +60,14 @@ connection.onmessage = function(event) {
           }
           break;
         case "game":
+          if(msg.leaderboard) {
+            let gameLeaderboard = JSON.parse(msg.leaderboard)
+            if(msg.type == "endGame") {
+              window.manageConcurrentLeaderboard(msg.gameId, gameLeaderboard, "remove");
+            } else {
+              window.manageConcurrentLeaderboard(msg.gameId, gameLeaderboard, "update");
+            }
+          }
           if(userSession.gameId == msg.gameId) {
             let firstLetter;
             let secondLetter;

@@ -88,11 +88,18 @@ function checkValidationMessage(valid, uid, username) {
     }
 }
 
-function updateLobby(lobby) {
+function updateLobby(lobby, allTimeLeaderboard) {
     lobbyArray = JSON.parse(lobby);
+    allTimeLeaderboard = JSON.parse(allTimeLeaderboard);
     lobbyArray.joinableGames.forEach(game => {
         addGameToList(game);
     });
+    
+    for (const [gameId, leaderboard] of Object.entries(lobbyArray.concurrentLeaderboard)) {
+        window.manageConcurrentLeaderboard(gameId, leaderboard, "add");
+    }
+
+    window.updateAllTimeLeaderboard(allTimeLeaderboard);
 }
 
 

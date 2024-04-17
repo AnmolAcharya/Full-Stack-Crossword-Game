@@ -113,7 +113,6 @@ function startTimer() {
     gameTimer.textContent = "1:00";
     const endTime = Date.now() + 60 * 1000;
     updateTimer(endTime);
-    console.log(userSession.color);
 }
 
 function updateTimer(endTime) {
@@ -261,7 +260,6 @@ function updateWordBank(updatedWordBank) {
 }
 
 function updateLeaderboard(updatedLeaderboard) {
-    //updatedLeaderboard = JSON.parse(updatedLeaderboard);
     leaderboard.forEach(leaderboardList => {
         const leaderboardEntry = leaderboardList.querySelectorAll(".player");
         let numPlayers = updatedLeaderboard.length

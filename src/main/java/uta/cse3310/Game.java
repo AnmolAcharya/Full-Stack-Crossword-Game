@@ -13,6 +13,7 @@ public class Game {
 	public ArrayList<Player> players;
 	public ArrayList<Player> leaderboard;
 	public GameClock gameClock;
+	public boolean inProgress;
 
 	private transient GameObserver observer;
 
@@ -30,6 +31,7 @@ public class Game {
 		this.leaderboard = players;
 		this.gameClock = new GameClock(1);
 		this.observer = app;
+		this.inProgress = false;
 
 		// reset score, assign color and set color in use, the rest not in use
 		player.currentScore = 0;
@@ -43,6 +45,7 @@ public class Game {
 
 	public void startGame(){
 		joinable = false;
+		inProgress = true;
 		gameClock.startTimer(this::endGame);
 	}
 	

@@ -84,7 +84,7 @@ public class App extends WebSocketServer implements GameObserver {
     broadcast(jsonObject.toString());
 
     // update all time leaderboard
-    System.out.println(game.leaderboard);
+    System.out.println("Game Ended: " + game.gameTitle);
     lobby.updateAllTimeLeaderboard(game.leaderboard);
     jsonObject = new JsonObject();
     // prepare JSON message
@@ -103,17 +103,8 @@ public class App extends WebSocketServer implements GameObserver {
 
     System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
 
-    // ServerEvent E = new ServerEvent();
-
-    // allows the websocket to give us the Game when a message arrives
-    // conn.setAttachment(G);
-
     Gson gson = new Gson();
-    // Note only send to the single connection
-    // conn.send(gson.toJson(E));
-    // System.out.println(gson.toJson(E));
 
-    // The state of the game has changed, so lets send it to everyone
     String jsonString;
     jsonString = gson.toJson("New Server Connection");
     handleNewConnection(conn, gson);
@@ -144,19 +135,35 @@ public class App extends WebSocketServer implements GameObserver {
       Game G = activeGames.get(disconectedPlayer.gameId);
       // remove player from game and update joinability
       G.removePlayer(disconectedPlayer);
-      G.updateJoinable();
 
-      jsonObject.addProperty("numPlayer", G.players.size());
-      if (G.joinable) {
-        jsonObject.addProperty("function", "update");
-        // Add players from game to JSON
-        for (int i = 0; i < G.players.size(); i++) {
-          String jsonPlayer = gson.toJson(G.players.get(i));
-          jsonArray.add(jsonPlayer);
-        }
-        jsonObject.addProperty("players", gson.toJson(jsonArray));
+      if(G.inProgress) {
+        // prepare JSON message
+        jsonObject.addProperty("screen", "game");
+        jsonObject.addProperty("type", "leaveGame");
+        jsonObject.addProperty("uid", disconectedPlayer.uid);
+        jsonObject.addProperty("gameId", G.gameId);
+        jsonObject.addProperty("leaderboard", gson.toJson(G.leaderboard));
       } else {
-        jsonObject.addProperty("function", "remove");
+        G.updateJoinable();
+  
+        jsonObject.addProperty("numPlayer", G.players.size());
+        if (G.joinable) {
+          jsonObject.addProperty("function", "update");
+          // Add players from game to JSON
+          for (int i = 0; i < G.players.size(); i++) {
+            String jsonPlayer = gson.toJson(G.players.get(i));
+            jsonArray.add(jsonPlayer);
+          }
+          jsonObject.addProperty("players", gson.toJson(jsonArray));
+        } else {
+          jsonObject.addProperty("function", "remove");
+        }
+        // prepare JSON message
+        jsonObject.addProperty("screen", "lobby");
+        jsonObject.addProperty("type", "updateGameList");
+        jsonObject.addProperty("uid", disconectedPlayer.uid);
+        jsonObject.addProperty("userState", "leave");
+        jsonObject.addProperty("gameId", disconectedPlayer.gameId);
       }
 
       // if no players in game
@@ -167,13 +174,6 @@ public class App extends WebSocketServer implements GameObserver {
       }
 
     }
-
-    // prepare JSON message
-    jsonObject.addProperty("screen", "lobby");
-    jsonObject.addProperty("type", "updateGameList");
-    jsonObject.addProperty("uid", disconectedPlayer.uid);
-    jsonObject.addProperty("userState", "leave");
-    jsonObject.addProperty("gameId", disconectedPlayer.gameId);
 
     // broadcast JSON message
     broadcast(jsonObject.toString());
@@ -227,13 +227,13 @@ public class App extends WebSocketServer implements GameObserver {
     Player newPlayer = new Player(uid);
     activeConnections.put(conn, newPlayer);
     activeSessions.put(uid, newPlayer);
-
     lobby.updateLobby(activeGames);
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("screen", "landing");
     jsonObject.addProperty("type", "newSession");
     jsonObject.addProperty("uid", uid);
     jsonObject.addProperty("lobby", gson.toJson(lobby));
+    jsonObject.addProperty("allTimeLeaderboard", gson.toJson(lobby.allTimeLeaderboard));
     // Send UID and lobby info to the client
     conn.send(jsonObject.toString());
   }
@@ -294,7 +294,6 @@ public class App extends WebSocketServer implements GameObserver {
           jsonObject.addProperty("gameId", G.gameId);
           jsonObject.addProperty("numPlayer", G.players.size());
           jsonObject.addProperty("gameTitle", G.gameTitle);
-
           // broadcast JSON message
           broadcast(jsonObject.toString());
 
@@ -413,12 +412,22 @@ public class App extends WebSocketServer implements GameObserver {
           G.startGame();
           jsonObject.addProperty("gameData", gson.toJson(G));
         }
-
         jsonObject.addProperty("start", canStartGame);
         jsonObject.addProperty("players", gson.toJson(jsonArray));
         jsonObject.addProperty("gameId", G.gameId);
         // broadcast JSON message
         broadcast(jsonObject.toString());
+
+        // update concurrent leaderboard at game start
+        if(canStartGame) {
+          jsonObject = new JsonObject();
+          // prepare JSON message
+          jsonObject.addProperty("screen", "lobby");
+          jsonObject.addProperty("type", "updateConcurrentLeaderboard");
+          jsonObject.addProperty("leaderboard", gson.toJson(lobby.concurrentLeaderboard));
+          // broadcast JSON message
+          broadcast(jsonObject.toString());
+        }
 
         break;
       case "game":
@@ -438,7 +447,6 @@ public class App extends WebSocketServer implements GameObserver {
           jsonObject.addProperty("color", playerColor);
           jsonObject.addProperty("textToAdd", text);
 
-          System.out.println(jsonObject.toString());
           broadcast(jsonObject.toString());
 
         } else if (type.equals("letterSelection")) {

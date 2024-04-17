@@ -172,7 +172,7 @@ function removeGameFromList(msg) {
     let gameId = msg.gameId;
 
     // if game hasnt started, add or remove player from game depending on state
-    if(msg.joinable == null) {
+    if (msg.joinable == null) {
         handleUserState(msg);
     }
 
@@ -247,8 +247,78 @@ function updateAllTimeLeaderboard(updatedLeaderboard) {
     });
 }
 
+function manageConcurrentLeaderboard(gameId, leaderboardData, func) {
+    const concurrentLeaderboards = document.querySelector('.concurrentLeaderboard').querySelector(".lobbyLeaderboards");
+    const gameLeaderboard = document.querySelector(`.gameLeaderboard[data-game-id="${gameId}"]`);
+
+    switch (func) {
+        case 'add':
+            // Create the main container for the game leaderboard
+            const newGameLeaderboard = document.createElement('div');
+            newGameLeaderboard.className = 'gameLeaderboard';
+            newGameLeaderboard.setAttribute('data-game-id', gameId);
+
+            // Create and add the game ID and leader labels
+            const labelsSpan = document.createElement('span');
+            labelsSpan.className = 'gameLeaderboardLabels';
+            labelsSpan.innerHTML = `
+                <span class="concurrentGameId">${gameId.substr(0, 4)}</span>
+                <div class="leaderLabels">
+                    <p>User name</p>
+                    <p>Words found</p>
+                </div>`;
+            newGameLeaderboard.appendChild(labelsSpan);
+
+            // Create the ordered list for players
+            const playerList = document.createElement('ol');
+            playerList.className = 'allTimeList';
+            leaderboardData.forEach(player => {
+                const listItem = document.createElement('li');
+                listItem.className = 'leaderListItem';
+                listItem.innerHTML = `${player.userName}<span class="wordsFound">${player.currentScore}</span>`;
+                playerList.appendChild(listItem);
+            });
+            newGameLeaderboard.appendChild(playerList);
+
+            // Append the new leaderboard to the container
+            concurrentLeaderboards.appendChild(newGameLeaderboard);
+
+            break;
+
+        case 'update':
+            if(leaderboardData.length == 0) {
+                manageConcurrentLeaderboard(gameId, leaderboardData, "remove");
+                return;
+            }
+
+            if (gameLeaderboard) {
+                // Update the existing game leaderboard
+                const playerListToUpdate = gameLeaderboard.querySelector('.allTimeList');
+                playerListToUpdate.innerHTML = '';  // Clear existing list items
+                leaderboardData.forEach(player => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'leaderListItem';
+                    listItem.innerHTML = `${player.userName}<span class="wordsFound">${player.currentScore}</span>`;
+                    playerListToUpdate.appendChild(listItem);
+                });
+            }
+
+            console.log("Leaderboard Update Length: " + leaderboardData.length);
+
+            break;
+
+        case 'remove':
+            if (gameLeaderboard) {
+                // Remove the existing game leaderboard
+                concurrentLeaderboards.removeChild(gameLeaderboard);
+            }
+            break;
+    }
+}
+
 window.updateGames = updateGames;
 window.addGameToList = addGameToList;
 window.removeGameFromList = removeGameFromList;
 window.enterLobby = enterLobby;
 window.updateAllTimeLeaderboard = updateAllTimeLeaderboard;
+window.manageConcurrentLeaderboard = manageConcurrentLeaderboard

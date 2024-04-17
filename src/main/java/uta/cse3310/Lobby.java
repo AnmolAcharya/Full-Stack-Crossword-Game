@@ -24,19 +24,18 @@ public class Lobby {
         this.concurrentLeaderboard = new HashMap<String, ArrayList<Player>>();
     }
 
-    // Method to update joinable games and concurrent leaderboard
+    // update joinable games and concurrent leaderboard
     public void updateLobby(Map<String, Game> activeGames) {
         joinableGames.clear();
         concurrentLeaderboard.clear();
-        // Collections.sort(allTimeLeaderboard,(p1,p2)-> p1.highscore-p2.highscore);
 
         for (Map.Entry<String, Game> entry : activeGames.entrySet()) {
             Game game = entry.getValue();
             if (game.joinable) {
-                // If game is joinable add it to the list of joinable games
+                // if game is joinable add it to the list of joinable games
                 joinableGames.add(game);
             } else {
-                // If game is not joinable add its leaderboard info to the concurrent
+                // if game is not joinable add its leaderboard info to the concurrent
                 // leaderboard
                 concurrentLeaderboard.put(game.gameId, game.leaderboard);
             }

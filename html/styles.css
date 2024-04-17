@@ -141,7 +141,7 @@ button, input, li {
     height: 60vh;
     background-color: #07091A;
     border: 2px solid white;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 .allTimeLeaderboard .lobbyLeaderboards {
@@ -214,8 +214,24 @@ button, input, li {
     background-color: #1E3CE6;
 }
 
+.gameLeaderboardLabels {
+    background-color: #07091A;
+    height: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.concurrentGameId {
+    width: fit-content;
+    height: fit-content;
+    margin: 4px 0 0 8px;
+    font-size: .875rem;
+    font-weight: 500;
+}
+
 .allTimeList {
-    counter-reset: all-time-counter; /* Reset the counter here in the list */
+    counter-reset: all-time-counter;
     list-style-type: none;
     padding: 0;
     display: flex;

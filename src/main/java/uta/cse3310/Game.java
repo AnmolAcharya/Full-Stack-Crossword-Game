@@ -29,7 +29,7 @@ public class Game {
 		this.grid.fillGrid(grid.wordBank);
 		this.players = new ArrayList<Player>();
 		this.leaderboard = players;
-		this.gameClock = new GameClock(1);
+		this.gameClock = new GameClock(5);
 		this.observer = app;
 		this.inProgress = false;
 

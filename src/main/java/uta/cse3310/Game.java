@@ -97,7 +97,7 @@ public class Game {
 		}
 	}
 	
-	public void checkEndGame() {
+	public boolean checkEndGame() {
 		boolean allWordsFound = true;
         
         for (Boolean found : grid.wordBank.values()) {
@@ -110,6 +110,8 @@ public class Game {
         if (allWordsFound) {
             endGame();
         }
+
+		return allWordsFound;
 	}
 
 	public void endGame(){

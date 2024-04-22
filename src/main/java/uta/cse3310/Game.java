@@ -42,6 +42,10 @@ public class Game {
         }
 		players.add(player);
 	}
+	
+	public Game(){
+		this.joinable = true;
+	}
 
 	public void startGame(){
 		joinable = false;

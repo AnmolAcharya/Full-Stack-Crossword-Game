@@ -11,8 +11,21 @@ import org.java_websocket.server.WebSocketServer;
 import java.util.Timer;
 import java.util.HashMap;
 import java.util.Map;
+import org.mockito.Mockito;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
+
 
 public class AppTest extends TestCase {
+
+    App app = new App(9002);
+    Gson gson = new Gson();
+    WebSocket webSocketMock = Mockito.mock(WebSocket.class);
 
     public AppTest(String testName) {
         super(testName);
@@ -20,12 +33,12 @@ public class AppTest extends TestCase {
 
     public static Test suite() {
         return new TestSuite(AppTest.class);
+
     }
 
-   App app = new App(9002); 	
-
-    public void testValidateUsername() {
-    	
+    public void testHandleMessage() {
+    	app.getWords();
+        app.start();
     	Player firstPlayer = new Player("xxaa");
         Player secondPlayer = new Player("xxbb");
 
@@ -40,12 +53,29 @@ public class AppTest extends TestCase {
         String secondPlayerID = "xxbb";
         assertFalse("false", app.validateUsername(secondPlayerUN, secondPlayerID));
 
-        // Add your assertions or test logic here
-    }
-    
-    
-    
-    
-    
-}
+               // Add your assertions or test logic here
+        String jsonMessage = "{\"screen\":\"lobby\",\"type\":\"createGame\",\"uid\":\"xxaa\"}";
+        
+        assertTrue("true", app.activeGames.size() == 0);
+        app.handleMessage(gson, jsonMessage, webSocketMock);
+        
+        assertTrue("true", app.activeGames.size() == 1);
 
+ 
+        String gameId = app.activeGames.keySet().stream().findFirst().orElse(null);
+        String jsonMessage2 = "{\"screen\":\"lobby\",\"type\":\"joinGame\",\"uid\":\"xxbb\", \"gameId\":\""+gameId +"\"}";
+        assertTrue("true", app.activeGames.get(gameId).players.size() == 1);
+        app.handleMessage(gson, jsonMessage2, webSocketMock);
+        assertTrue("true", app.activeGames.get(gameId).players.size() == 2);
+        
+        String jsonMessage3 = "{\"screen\":\"lobby\",\"type\":\"leaveGame\",\"uid\":\"xxbb\", \"gameId\":\""+gameId +"\"}";
+        assertTrue("players before leaveGame", app.activeGames.get(gameId).players.size() == 2);
+        app.handleMessage(gson, jsonMessage3, webSocketMock);
+        assertTrue("players after leaveGame", app.activeGames.get(gameId).players.size() == 1);
+
+
+    }
+
+    
+        
+}

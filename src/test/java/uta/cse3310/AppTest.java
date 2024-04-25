@@ -11,7 +11,6 @@ import org.java_websocket.server.WebSocketServer;
 import java.util.Timer;
 import java.util.HashMap;
 import java.util.Map;
-import org.mockito.Mockito;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;

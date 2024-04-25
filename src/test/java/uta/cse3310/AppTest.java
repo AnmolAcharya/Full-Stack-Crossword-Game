@@ -8,6 +8,8 @@ import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+
+import org.mockito.Mockito;
 import java.util.Timer;
 import java.util.HashMap;
 import java.util.Map;

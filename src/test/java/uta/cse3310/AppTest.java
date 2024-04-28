@@ -10,9 +10,7 @@ import com.google.gson.Gson;
 
 public class AppTest extends TestCase {
 
-    private App app;
-    private Gson gson;
-    private WebSocket webSocketMock;
+    
 
     public AppTest(String testName) {
         super(testName);
@@ -22,20 +20,15 @@ public class AppTest extends TestCase {
         return new TestSuite(AppTest.class);
     }
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        app = new App(9002); // Assuming App class takes port number as constructor argument
-        gson = new Gson();
-        webSocketMock = Mockito.mock(WebSocket.class);
-
-        app.getWords();
-        app.start();
-    }
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+  
 
     public void testValidateUsername() {
+    
+    	App app =  new App(9002);
+    	Gson gson = new Gson();
+    	WebSocket webSocketMock = Mockito.mock(WebSocket.class);
+    	app.getWords();
+    	
         Player firstPlayer = new Player("xxaa");
         Player secondPlayer = new Player("xxbb");
 
@@ -52,6 +45,11 @@ public class AppTest extends TestCase {
     }
 
     public void testhandleMessage() {
+    	App app =  new App(9002);
+    	Gson gson = new Gson();
+    	WebSocket webSocketMock = Mockito.mock(WebSocket.class);
+    	app.getWords();
+    	
         Player firstPlayer = new Player("xxaa");
         Player secondPlayer = new Player("xxbb");
 

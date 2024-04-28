@@ -31,7 +31,6 @@ public class AppTest extends TestCase {
         app.getWords();
         app.start();
     }
-
     protected void tearDown() throws Exception {
         super.tearDown();
     }

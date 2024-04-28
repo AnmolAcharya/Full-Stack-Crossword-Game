@@ -37,6 +37,13 @@ public class Grid{
 	public HashMap<String, Boolean> wordBank;
 	public double density = .7;
     public String[] directions = {"N","S","E","W","NW","SW","NE","SE"};
+    public float currentDens = 0;
+    public int wordCount = 0;
+    public int numCross = 0;
+    public float numDiagR = 0;
+    public float numDiagL = 0;
+    public float numVert = 0;
+    public float numHoriz = 0;
     public ArrayList<Letter> hints;
 	public Grid(){
         wordBank = new HashMap<String,Boolean>();
@@ -271,7 +278,6 @@ public class Grid{
 	public HashMap<String,Boolean> generateWordBank(ArrayList<String> possibleWords){
 		//variables for creation
 		int j = 0;
-		float currentDens = 0;
 		//rng
 		Random r = new Random();
 		//while we're below capacity
@@ -280,8 +286,9 @@ public class Grid{
 			j = r.nextInt((possibleWords.size()));
 			//add the string located at the index of j
 			this.wordBank.put(possibleWords.get(j),false);
+            this.wordCount++;
 			//add load to capacity
-			currentDens += ((double)possibleWords.get(j).length()/400.0);
+			this.currentDens += ((double)possibleWords.get(j).length()/400.0);
 			//remove word
             possibleWords.remove(j);
 		}
@@ -290,76 +297,94 @@ public class Grid{
 	}
 	
     public boolean validateGrid(int p, int q, char[] word, String direction){
+        boolean crossedWord = false;
         switch(direction){
             case "N":
                 for(int i = 0; i < word.length; i++){
                     if(q<0)
                         return false;
-                    if((this.grid[q][p].letter!=' ')) return false;
+                    if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
+                    if(this.grid[q][p].letter == word[i]) crossedWord = true;
                     q--;
                 }
+                this.numVert++;
                 break;
             case "S":
                 for(int i = 0; i< word.length; i++){
                     if(q>19)
                         return false;
-                        if((this.grid[q][p].letter!=' ')) return false;
+                        if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
+                        if(this.grid[q][p].letter == word[i]) crossedWord = true;
                     q++;
                 }
+                this.numVert++;
                 break;
             case "E":
                 for(int i = 0; i < word.length; i++){
                     if(p>19)
                         return false;
-                    if((this.grid[q][p].letter!=' ')) return false;
+                    if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
+                    if(this.grid[q][p].letter == word[i]) crossedWord = true;
                     p++;
                 }
+                this.numHoriz++;
                 break;
             case "W":
                 for(int i = 0; i < word.length; i++){
                     if(p<0)
                         return false;
-                    if((this.grid[q][p].letter!=' ')) return false;
+                    if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
+                    if(this.grid[q][p].letter == word[i]) crossedWord = true;
                     p--;
                 }
+                this.numHoriz++;
                 break;
             case "NW":
                 for(int i = 0; i < word.length; i++){
                     if(p<0||q<0)
                         return false;
-                    if((this.grid[q][p].letter!=' ')) return false;
+                    if((this.grid[q][p].letter!=' '&& this.grid[q][p].letter != word[i])) return false;
+                    if(this.grid[q][p].letter == word[i]) crossedWord = true;
                     p--;
                     q--;
                 }
+                this.numDiagR++;
                 break;
             case "SW":
                 for(int i = 0; i < word.length; i++){
                     if(p<0||q>19)
                         return false;
-                    if((this.grid[q][p].letter!=' ')) return false;
+                    if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
+                    if(this.grid[q][p].letter == word[i]) crossedWord = true;
                     p--;
                     q++;
                 }
+                this.numDiagL++;
                 break;
             case "NE":
                 for(int i = 0; i < word.length; i++){
                     if(p>19||q<0)
                         return false;
-                    if((this.grid[q][p].letter!=' ')) return false;
+                    if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
+                    if(this.grid[q][p].letter == word[i]) crossedWord = true;
                     p++;
                     q--;
                 }
+                this.numDiagL++;
                 break;
             case "SE":
                 for(int i = 0; i < word.length; i++){
                     if(p>19||q>19)
                         return false;
-                    if((this.grid[q][p].letter!=' ')) return false;
+                    if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
+                    if(this.grid[q][p].letter == word[i]) crossedWord = true;
                     p++;
                     q++;
                 }
+                this.numDiagR++;
                 break;
         }
+        if(crossedWord) this.numCross++;
         return true;
     }
 
@@ -453,6 +478,8 @@ public class Grid{
                 if(failcounter == 100){
                     failures[failindex] = i.getKey();
                     failindex++;
+                    this.currentDens-=((double)ichar.length/400.0);
+                    this.wordCount--;
                     //100 fails, word must be too big for remaining area.
                     break;
                 }
@@ -491,6 +518,10 @@ public class Grid{
         for(int o = 0; o < failindex; o++){
             this.wordBank.remove(failures[o]);
         }
-		return this.grid;
+        this.numDiagL = (this.numDiagL/wordCount)*(100);
+        this.numDiagR = (this.numDiagR/wordCount)*(100);
+        this.numHoriz = (this.numHoriz/wordCount)*(100);
+        this.numVert = (this.numVert/wordCount)*(100);
+        return this.grid;
 	}
 }

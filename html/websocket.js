@@ -27,6 +27,7 @@ connection.onmessage = function(event) {
             case "newSession":
               window.setUserId(msg.uid);
               window.updateLobby(msg.lobby, msg.allTimeLeaderboard);
+              document.title = "TWSG " + msg.version;
               break;
             case "validateUsername":
               window.checkValidationMessage(msg.valid, msg.uid, msg.username);

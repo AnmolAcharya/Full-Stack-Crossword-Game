@@ -45,8 +45,10 @@ public class App extends WebSocketServer implements GameObserver {
   public Map<String, Game> activeGames = new HashMap<String, Game>();
   public ArrayList<String> words = new ArrayList<String>();
   public Lobby lobby = new Lobby();
-  public String id = null;
 
+  public String version = (System.getenv("VERSION") != null ? System.getenv("VERSION") : "1.0.0");
+
+  // Read in word list
   public ArrayList<String> getWords() {
     String str;
     try {
@@ -76,6 +78,7 @@ public class App extends WebSocketServer implements GameObserver {
   public void notifyGameEnd(Game game) {
     JsonObject jsonObject = new JsonObject();
     Gson gson = new Gson();
+
     // prepare JSON message
     jsonObject.addProperty("screen", "game");
     jsonObject.addProperty("type", "endGame");
@@ -86,8 +89,9 @@ public class App extends WebSocketServer implements GameObserver {
     // update all time leaderboard
     System.out.println("Game Ended: " + game.gameTitle);
     lobby.updateAllTimeLeaderboard(game.leaderboard);
-    jsonObject = new JsonObject();
+
     // prepare JSON message
+    jsonObject = new JsonObject();
     jsonObject.addProperty("screen", "lobby");
     jsonObject.addProperty("type", "updateAllTimeLeaderboard");
     jsonObject.addProperty("leaderboard", gson.toJson(lobby.allTimeLeaderboard));
@@ -100,23 +104,21 @@ public class App extends WebSocketServer implements GameObserver {
 
   @Override
   public void onOpen(WebSocket conn, ClientHandshake handshake) {
-
     System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
 
     Gson gson = new Gson();
+    String jsonString = gson.toJson("New Server Connection");
 
-    String jsonString;
-    jsonString = gson.toJson("New Server Connection");
     handleNewConnection(conn, gson);
-    
 
     broadcast(jsonString);
-
   }
 
   @Override
   public void onClose(WebSocket conn, int code, String reason, boolean remote) {
     System.out.println(conn + " has closed");
+
+    // find closed player
     Player disconectedPlayer = activeConnections.get(conn);
 
     // remove player from server
@@ -125,7 +127,8 @@ public class App extends WebSocketServer implements GameObserver {
     // remove players username from list
     usernames.remove(disconectedPlayer.userName);
 
-    System.out.println(disconectedPlayer + " removed"); // removed username from list
+    // removed username from list
+    System.out.println(disconectedPlayer + " removed");
 
     Gson gson = new Gson();
     JsonObject jsonObject = new JsonObject();
@@ -136,7 +139,7 @@ public class App extends WebSocketServer implements GameObserver {
       // remove player from game and update joinability
       G.removePlayer(disconectedPlayer);
 
-      if(G.inProgress) {
+      if (G.inProgress) {
         // prepare JSON message
         jsonObject.addProperty("screen", "game");
         jsonObject.addProperty("type", "leaveGame");
@@ -145,7 +148,7 @@ public class App extends WebSocketServer implements GameObserver {
         jsonObject.addProperty("leaderboard", gson.toJson(G.leaderboard));
       } else {
         G.updateJoinable();
-  
+
         jsonObject.addProperty("numPlayer", G.players.size());
         if (G.joinable) {
           jsonObject.addProperty("function", "update");
@@ -192,8 +195,7 @@ public class App extends WebSocketServer implements GameObserver {
     handleMessage(gson, message, conn);
 
     // Confirm message recieved
-    String jsonString;
-    jsonString = gson.toJson("Server recieved message");
+    String jsonString = gson.toJson("Server recieved message");
     broadcast(jsonString);
   }
 
@@ -223,7 +225,6 @@ public class App extends WebSocketServer implements GameObserver {
 
   public void handleNewConnection(WebSocket conn, Gson gson) {
     String uid = generateUniqueID();
-    id = uid;
     Player newPlayer = new Player(uid);
     activeConnections.put(conn, newPlayer);
     activeSessions.put(uid, newPlayer);
@@ -231,12 +232,13 @@ public class App extends WebSocketServer implements GameObserver {
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("screen", "landing");
     jsonObject.addProperty("type", "newSession");
+    jsonObject.addProperty("version", version);
     jsonObject.addProperty("uid", uid);
     jsonObject.addProperty("lobby", gson.toJson(lobby));
     jsonObject.addProperty("allTimeLeaderboard", gson.toJson(lobby.allTimeLeaderboard));
     // Send UID and lobby info to the client
     conn.send(jsonObject.toString());
-    
+
   }
 
   public void handleMessage(Gson gson, String jsonMessage, WebSocket conn) {
@@ -420,7 +422,7 @@ public class App extends WebSocketServer implements GameObserver {
         broadcast(jsonObject.toString());
 
         // update concurrent leaderboard at game start
-        if(canStartGame) {
+        if (canStartGame) {
           jsonObject = new JsonObject();
           // prepare JSON message
           jsonObject.addProperty("screen", "lobby");
@@ -566,8 +568,7 @@ public class App extends WebSocketServer implements GameObserver {
     String testGrid = System.getenv("TEST_GRID");
     String httpPort = System.getenv("HTTP_PORT");
     String websocketPort = System.getenv("WEBSOCKET_PORT");
-    String version = System.getenv("VERSION");
-    
+
     // Set up the http server
     int port = (httpPort != null ? Integer.parseInt(httpPort) : 9002);
     HttpServer H = new HttpServer(port, "./html");

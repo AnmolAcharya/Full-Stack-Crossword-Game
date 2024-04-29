@@ -92,6 +92,10 @@ connection.onmessage = function(event) {
                 firstLetter = JSON.parse(msg.firstLetter);
                 window.updateLetterSelection(firstLetter.coordinate[0], firstLetter.coordinate[1], firstLetter.selections);
                 break;
+              case "hint":
+                hint = JSON.parse(msg.hint);
+                window.giveHint(hint);
+                break;
               case "chatRoom":
                 window.updateChatBox(msg.userName, msg.color, msg.textToAdd);
                 break;

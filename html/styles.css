@@ -619,6 +619,10 @@ button, input, li {
     font-weight: 500;
 }
 
+.hintHighlight {
+    box-shadow: inset 0 0 0 3px #FFE500;
+}
+
 /*--- END GAME SCREEN ---*/
 
 #endGameScreen {

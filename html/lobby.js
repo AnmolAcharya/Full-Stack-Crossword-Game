@@ -231,8 +231,6 @@ function updateAllTimeLeaderboard(updatedLeaderboard) {
     // clear current leaderboard
     allTimeList.innerHTML = "";
 
-    console.log(updatedLeaderboard);
-
     // add each entry into leaderboard
     updatedLeaderboard.forEach(entry => {
         let listItem = document.createElement('li');
@@ -304,9 +302,6 @@ function manageConcurrentLeaderboard(gameId, leaderboardData, func) {
                     playerListToUpdate.appendChild(listItem);
                 });
             }
-
-            console.log("Leaderboard Update Length: " + leaderboardData.length);
-
             break;
 
         case 'remove':

@@ -46,7 +46,7 @@ public class App extends WebSocketServer implements GameObserver {
   public ArrayList<String> words = new ArrayList<String>();
   public Lobby lobby = new Lobby();
 
-  public String version = (System.getenv("VERSION") != null ? System.getenv("VERSION") : "1.0.0");
+  public String version = System.getenv("VERSION");
 
   // Read in word list
   public ArrayList<String> getWords() {
@@ -74,6 +74,7 @@ public class App extends WebSocketServer implements GameObserver {
     super(new InetSocketAddress(port), Collections.<Draft>singletonList(draft));
   }
 
+  // Gives the game the capability to broadcast a message directly on game end
   @Override
   public void notifyGameEnd(Game game) {
     JsonObject jsonObject = new JsonObject();
@@ -100,6 +101,20 @@ public class App extends WebSocketServer implements GameObserver {
     // liquitate the game, then dump it into the ocean to never be heard of again
     activeGames.remove(game.gameId);
     game = null;
+  }
+
+  // Give the game the capability to send game hint directly to game players
+  @Override
+  public void sendGameHint(Letter hint, String gameId) {
+    JsonObject jsonObject = new JsonObject();
+    Gson gson = new Gson();
+
+    // prepare JSON message
+    jsonObject.addProperty("screen", "game");
+    jsonObject.addProperty("type", "hint");
+    jsonObject.addProperty("gameId", gameId);
+    jsonObject.addProperty("hint", gson.toJson(hint));
+    broadcast(jsonObject.toString());
   }
 
   @Override
@@ -499,7 +514,7 @@ public class App extends WebSocketServer implements GameObserver {
           jsonObject = new JsonObject();
           jsonObject.addProperty("screen", "game");
 
-          if (g.grid.validateSelection(firstLetter, secondLetter)) {
+          if (g.validateWord(firstLetter, secondLetter)) {
             g.updateLeaderboard(p);
             g.checkEndGame();
             firstLetter.selections.clear();

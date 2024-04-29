@@ -11,6 +11,9 @@ const gameTimer = document.querySelector(".gameTimerValue");
 let firstSelection = null;
 let secondSelection = null;
 
+let interval;
+let hintGridItem;
+
 // set up color map for selections
 const colorMap = new Map();
 colorMap.set("red", "#E51B1B");
@@ -110,7 +113,7 @@ function setUpGame(gameData) {
 }
 
 function startTimer() {
-    gameTimer.textContent = "1:00";
+    gameTimer.textContent = "5:00";
     const endTime = Date.now() + 300 * 1000;
     updateTimer(endTime);
 }
@@ -129,7 +132,7 @@ function updateTimer(endTime) {
 }
 
 function clearGrid() {
-    while(wordGrid.firstChild) {
+    while (wordGrid.firstChild) {
         wordGrid.removeChild(wordGrid.firstChild);
     }
 }
@@ -176,6 +179,10 @@ wordGrid.addEventListener('click', function (event) {
             sendWordSelection(firstSelection, secondSelection);
             resetSelections();
         }
+    }
+
+    if (hintGridItem != null) {
+        stopBlinking();
     }
 });
 
@@ -244,6 +251,9 @@ function highlightWordOnGrid(firstLetter, secondLetter, playerColor) {
         const gridItem = document.getElementById(gridId);
         gridItem.style.backgroundColor = `${color}`;
         gridItem.style.pointerEvents = 'none';
+        if(gridItem == hintGridItem) {
+            stopBlinking();
+        }
         x += stepX;
         y += stepY;
     }
@@ -275,6 +285,36 @@ function updateLeaderboard(updatedLeaderboard) {
             leaderboardEntry[i].querySelector(".wordsFound").textContent = "";
         }
     })
+}
+
+function giveHint(hint) {
+    const x = hint.coordinate[0];
+    const y = hint.coordinate[1];
+
+    const gridId = `gridItem-${x}-${y}`;
+    hintGridItem = document.getElementById(gridId);
+
+    let isHighlighted = false;
+
+    // Function to toggle the highlight
+    const toggleHighlight = () => {
+        if (isHighlighted) {
+            hintGridItem.classList.remove('hintHighlight');
+        } else {
+            hintGridItem.classList.add('hintHighlight');
+        }
+        isHighlighted = !isHighlighted;
+    };
+
+    // Start blinking every 250ms
+    interval = setInterval(toggleHighlight, 250);
+}
+
+// Function to stop the blinking
+function stopBlinking() {
+    clearInterval(interval);
+    hintGridItem.classList.remove('hintHighlight');  // Ensure the highlight is removed when stopping
+    hintGridItem = null;
 }
 
 function resetGame() {

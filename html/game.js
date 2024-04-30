@@ -8,6 +8,12 @@ const exitGameButton = document.getElementById("gameScreen").querySelector(".exi
 const backToLobbyButton = document.querySelector(".backToLobby");
 const gameTimer = document.querySelector(".gameTimerValue");
 
+const gridDensityStat = document.getElementById("gridDensity");
+const verticalWordsStat = document.getElementById("verticalPercentage");
+const horizontalWordsStat = document.getElementById("horizontalPercentage");
+const diagonalRWordsStat = document.getElementById("diagonalRPercentage");
+const diagonalLWordsStat = document.getElementById("diagonalLPercentage");
+
 let firstSelection = null;
 let secondSelection = null;
 
@@ -104,11 +110,13 @@ function clearChatBox() {
 // Set up game (fill grid, fill word bank, reset leaderboard, reset chat, start timer)
 function setUpGame(gameData) {
     grid = gameData.grid.grid;
+    gridStats = gameData.grid;
     wordBankList = gameData.grid.wordBank;
     leaderboardList = gameData.leaderboard;
     fillGrid(grid);
     fillWordBank(wordBankList);
     updateLeaderboard(leaderboardList);
+    setGameStats(gridStats.currentDens, gridStats.numVert, gridStats.numHoriz, gridStats.numDiagR, gridStats.numDiagL);
     startTimer();
 }
 
@@ -166,6 +174,14 @@ function fillWordBank(wordBankList) {
         wordElement.textContent = word;
         wordBank.appendChild(wordElement);
     }
+}
+
+function setGameStats(gridDensity, verticalWords, horizontalWords, diagonalRWords, diagonalLWords) {
+    gridDensityStat.innerHTML = "Grid Density: " + gridDensity.toString().substr(0, 4) + "%";
+    verticalWordsStat.innerHTML = "Vertical Words: " + verticalWords.toString().substr(0, 4) + "%";
+    horizontalWordsStat.innerHTML = "Horizontal Words: " + horizontalWords.toString().substr(0, 4) + "%";
+    diagonalRWordsStat.innerHTML = "Diagonal Right Words: " + diagonalRWords.toString().substr(0, 4) + "%";
+    diagonalLWordsStat.innerHTML = "Diagonal Left Words: " + diagonalLWords.toString().substr(0, 4) + "%";
 }
 
 wordGrid.addEventListener('click', function (event) {
@@ -251,7 +267,7 @@ function highlightWordOnGrid(firstLetter, secondLetter, playerColor) {
         const gridItem = document.getElementById(gridId);
         gridItem.style.backgroundColor = `${color}`;
         gridItem.style.pointerEvents = 'none';
-        if(gridItem == hintGridItem) {
+        if (gridItem == hintGridItem) {
             stopBlinking();
         }
         x += stepX;
@@ -288,6 +304,10 @@ function updateLeaderboard(updatedLeaderboard) {
 }
 
 function giveHint(hint) {
+    if (interval && hintGridItem) {
+        stopBlinking();
+    }
+
     const x = hint.coordinate[0];
     const y = hint.coordinate[1];
 
@@ -295,6 +315,7 @@ function giveHint(hint) {
     hintGridItem = document.getElementById(gridId);
 
     let isHighlighted = false;
+
 
     // Function to toggle the highlight
     const toggleHighlight = () => {
@@ -338,3 +359,4 @@ window.updateLeaderboard = updateLeaderboard;
 window.updateChatBox = updateChatBox;
 window.endGame = endGame;
 window.resetGame = resetGame;
+window.giveHint = giveHint;

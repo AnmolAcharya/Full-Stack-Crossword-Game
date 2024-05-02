@@ -35,19 +35,31 @@ public class Grid{
      */
 	public Letter[][] grid = new Letter[20][20];
 	public HashMap<String, Boolean> wordBank;
-	public double density = .7;
+	public double density = .95;
     public String[] directions = {"N","S","E","W","NW","SW","NE","SE"};
     public float currentDens = 0;
     public int wordCount = 0;
     public int numCross = 0;
+    public int wordsAdded = 0;
     public float numDiagR = 0;
     public float numDiagL = 0;
-    public float numVert = 0;
+    public float numVertU = 0;
+    public float numVertD = 0;
     public float numHoriz = 0;
+    public int max = 0;
+    public float smallest = 100;
+    public ArrayList<Float> floats;
     public ArrayList<Letter> hints;
+
 	public Grid(){
         wordBank = new HashMap<String,Boolean>();
         hints = new ArrayList<Letter>();
+        floats = new ArrayList<Float>();
+        floats.add(numHoriz);
+        floats.add(numVertD);
+        floats.add(numVertU);
+        floats.add(numDiagL);
+        floats.add(numDiagR);
         for(int i = 0; i < 20; i++){
             for(int j = 0; j < 20; j++){
                 Letter l = new Letter(' ',0,0);
@@ -292,6 +304,7 @@ public class Grid{
 			//remove word
             possibleWords.remove(j);
 		}
+        this.max = (this.wordCount/5);
 		//return our shiny new word bank
 		return this.wordBank;
 	}
@@ -301,26 +314,35 @@ public class Grid{
         switch(direction){
             case "N":
                 for(int i = 0; i < word.length; i++){
+                    if(this.numVertU>=this.max) return false;
+                    if((this.numVertU/wordCount >= .15) && ((this.numVertD/wordCount < .15) || (this.numHoriz/wordCount < .15) || 
+                        (this.numDiagR/wordCount < .15) || (this.numDiagL < .15))) return false;
                     if(q<0)
                         return false;
                     if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
                     if(this.grid[q][p].letter == word[i]) crossedWord = true;
                     q--;
                 }
-                this.numVert++;
+                this.numVertU++;
                 break;
             case "S":
                 for(int i = 0; i< word.length; i++){
+                    if(this.numVertD>=this.max) return false;
+                    if((this.numVertD/wordCount >= .15) && ((this.numVertU/wordCount < .15) || (this.numHoriz/wordCount < .15) || 
+                        (this.numDiagR/wordCount < .15) || (this.numDiagL < .15))) return false;
                     if(q>19)
                         return false;
                         if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
                         if(this.grid[q][p].letter == word[i]) crossedWord = true;
                     q++;
                 }
-                this.numVert++;
+                this.numVertD++;
                 break;
             case "E":
                 for(int i = 0; i < word.length; i++){
+                    if(this.numHoriz>=this.max) return false;
+                    if((this.numHoriz/wordCount >= .15) && ((this.numVertD/wordCount < .15) || (this.numVertU/wordCount < .15) || 
+                        (this.numDiagR/wordCount < .15) || (this.numDiagL < .15))) return false;
                     if(p>19)
                         return false;
                     if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
@@ -331,6 +353,9 @@ public class Grid{
                 break;
             case "W":
                 for(int i = 0; i < word.length; i++){
+                    if(this.numHoriz>=this.max) return false;
+                    if((this.numHoriz/wordCount >= .15) && ((this.numVertD/wordCount < .15) || (this.numVertU/wordCount < .15) || 
+                        (this.numDiagR/wordCount < .15) || (this.numDiagL < .15))) return false;
                     if(p<0)
                         return false;
                     if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
@@ -341,6 +366,9 @@ public class Grid{
                 break;
             case "NW":
                 for(int i = 0; i < word.length; i++){
+                    if(this.numDiagR>=this.max) return false;
+                    if((this.numDiagR/wordCount >= .15) && ((this.numVertD/wordCount < .15) || (this.numHoriz/wordCount < .15) || 
+                        (this.numVertU/wordCount < .15) || (this.numDiagL < .15))) return false;
                     if(p<0||q<0)
                         return false;
                     if((this.grid[q][p].letter!=' '&& this.grid[q][p].letter != word[i])) return false;
@@ -352,6 +380,9 @@ public class Grid{
                 break;
             case "SW":
                 for(int i = 0; i < word.length; i++){
+                    if(this.numDiagL>=this.max) return false;
+                    if((this.numDiagL/wordCount >= .15) && ((this.numVertD/wordCount < .15) || (this.numHoriz/wordCount < 15) || 
+                        (this.numDiagR/wordCount < .15) || (this.numVertU < .15))) return false;
                     if(p<0||q>19)
                         return false;
                     if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
@@ -363,6 +394,9 @@ public class Grid{
                 break;
             case "NE":
                 for(int i = 0; i < word.length; i++){
+                    if(this.numDiagL>=this.max) return false;
+                    if((this.numDiagL/wordCount >= .15) && ((this.numVertD/wordCount < .15) || (this.numHoriz/wordCount < .15) || 
+                        (this.numDiagR/wordCount < .15) || (this.numVertU < .15))) return false;
                     if(p>19||q<0)
                         return false;
                     if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
@@ -374,6 +408,9 @@ public class Grid{
                 break;
             case "SE":
                 for(int i = 0; i < word.length; i++){
+                    if(this.numDiagR>=max) return false;
+                    if((this.numDiagR/wordCount >= .15) && ((this.numVertD/wordCount < .15) || (this.numHoriz/wordCount < .15) || 
+                        (this.numVertU/wordCount < .15) || (this.numDiagL < .15))) return false;
                     if(p>19||q>19)
                         return false;
                     if((this.grid[q][p].letter!=' ' && this.grid[q][p].letter != word[i])) return false;
@@ -459,6 +496,7 @@ public class Grid{
                 }
                 break;
         }
+        this.wordsAdded++;
         return true;
     }
 
@@ -468,19 +506,19 @@ public class Grid{
         Random q = new Random();
         boolean hmm = false;
         boolean hit = false;
-        String[] failures = new String[10];
+        String[] failures = new String[20];
         int failindex = 0;
         for(Map.Entry<String, Boolean> i:wordBank.entrySet()){
             char[] ichar = i.getKey().toCharArray();
             hit = false;
             int failcounter = 0;
             while(!hit){
-                if(failcounter == 100){
+                if(failcounter == 200000){
                     failures[failindex] = i.getKey();
                     failindex++;
                     this.currentDens-=((double)ichar.length/400.0);
                     this.wordCount--;
-                    //100 fails, word must be too big for remaining area.
+                    //10000 fails, word must be too big for remaining area.
                     break;
                 }
                 int r = p.nextInt(8);
@@ -521,7 +559,14 @@ public class Grid{
         this.numDiagL = (this.numDiagL/wordCount)*(100);
         this.numDiagR = (this.numDiagR/wordCount)*(100);
         this.numHoriz = (this.numHoriz/wordCount)*(100);
-        this.numVert = (this.numVert/wordCount)*(100);
+        this.numVertD = (this.numVertD/wordCount)*(100);
+        this.numVertU = (this.numVertU/wordCount)*(100);
+        System.out.println(this.numHoriz);
+        System.out.println(this.numVertD);
+        System.out.println(this.numVertU);
+        System.out.println(this.numDiagL);
+        System.out.println(this.numDiagR);
+        System.out.println(this.currentDens);
         return this.grid;
 	}
 }

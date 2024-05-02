@@ -156,6 +156,7 @@ public class GridUnitTest extends TestCase {
                 g.grid[i][j] = l;
             }
         }
+        g.max = 17;
         assertTrue("Should pass",g.validateGrid(5,0,"hello".toCharArray(),"S"));
         assertFalse("Should fail",g.validateGrid(5,0,"hello".toCharArray(),"E"));
         assertFalse("Should fail",g.validateGrid(5,0,"hello".toCharArray(),"W"));
@@ -179,6 +180,8 @@ public class GridUnitTest extends TestCase {
         assertFalse("Should fail",g.validateGrid(0,5,"hello".toCharArray(),"W"));
         assertFalse("Should fail",g.validateGrid(0,5,"hello".toCharArray(),"N"));
 
+        g.numHoriz = 0;
+
         assertTrue("Should pass",g.validateGrid(19,5,"hello".toCharArray(),"W"));
         assertFalse("Should fail",g.validateGrid(19,5,"hello".toCharArray(),"SE"));
         assertFalse("Should fail",g.validateGrid(19,5,"hello".toCharArray(),"NW"));
@@ -199,17 +202,25 @@ public class GridUnitTest extends TestCase {
         assertFalse("Should fail",g.validateGrid(19,19,"hello".toCharArray(),"SW"));
         assertFalse("Should fail",g.validateGrid(19,19,"hello".toCharArray(),"NE"));
 
+        g.numDiagR=0;
+
         assertTrue("Should pass",g.validateGrid(0,0,"hello".toCharArray(),"SE"));
         assertFalse("Should fail",g.validateGrid(0,0,"hello".toCharArray(),"SW"));
         assertFalse("Should fail",g.validateGrid(0,0,"hello".toCharArray(),"NW"));
         assertFalse("Should fail",g.validateGrid(0,0,"hello".toCharArray(),"NE"));
 
+        g.numDiagR = 0;
+
         assertTrue("Should pass",g.validateGrid(10,10,"hello".toCharArray(),"SE"));
         assertFalse("Should fail",g.validateGrid(10,10,"hello".toCharArray(),"SW"));
+        g.numDiagR=0;
         assertTrue("Should fail",g.validateGrid(10,10,"hello".toCharArray(),"NW"));
         assertFalse("Should fail",g.validateGrid(10,10,"hello".toCharArray(),"NE"));
 
+        g.numDiagR=0;
+
         g.clearGrid();
+        g.max = 0;
     }
 
     public void testAddWordToGrid(){

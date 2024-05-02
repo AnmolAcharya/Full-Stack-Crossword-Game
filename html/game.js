@@ -2,6 +2,7 @@ const wordGrid = document.querySelector(".wordGrid");
 const wordBank = document.querySelector(".wordBank");
 const chatForm = document.querySelector('.chatForm')
 const chatInput = document.querySelector('.chatInput');
+const gameChat = document.querySelector(".gameChat");
 const chatList = document.querySelector(".messageList");
 const leaderboard = document.querySelectorAll(".leaderboardList");
 const exitGameButton = document.getElementById("gameScreen").querySelector(".exitButton");
@@ -9,7 +10,8 @@ const backToLobbyButton = document.querySelector(".backToLobby");
 const gameTimer = document.querySelector(".gameTimerValue");
 
 const gridDensityStat = document.getElementById("gridDensity");
-const verticalWordsStat = document.getElementById("verticalPercentage");
+const verticalUWordsStat = document.getElementById("verticalUPercentage");
+const verticalDWordsStat = document.getElementById("verticalDPercentage");
 const horizontalWordsStat = document.getElementById("horizontalPercentage");
 const diagonalRWordsStat = document.getElementById("diagonalRPercentage");
 const diagonalLWordsStat = document.getElementById("diagonalLPercentage");
@@ -28,6 +30,19 @@ colorMap.set("pink", "#E100A5");
 colorMap.set("green", "#06A600");
 // reset grid for new game
 wordGrid.innerHTML = '';
+
+// resize game chat
+function resizeGameChat() {
+    const topControlHeight = document.querySelector(".topControls").offsetHeight;
+    console.log(topControlHeight);
+    // const leaderboardHeight = document.querySelector(".gameLeaderboard").offsetHeight;
+    const leaderboardHeight = 525.5;
+    console.log(leaderboardHeight);
+    let gameChatHeight = document.querySelector("html").offsetHeight - (topControlHeight + leaderboardHeight + 32 + 24);
+    console.log(document.querySelector("html").offsetHeight);
+    console.log(gameChatHeight);
+    gameChat.style.maxHeight = gameChatHeight + "px";
+}
 
 // exiting game
 exitGameButton.addEventListener('click', () => {
@@ -116,8 +131,9 @@ function setUpGame(gameData) {
     fillGrid(grid);
     fillWordBank(wordBankList);
     updateLeaderboard(leaderboardList);
-    setGameStats(gridStats.currentDens, gridStats.numVert, gridStats.numHoriz, gridStats.numDiagR, gridStats.numDiagL);
+    setGameStats(gridStats.currentDens, gridStats.numVertU, gridStats.numVertD, gridStats.numHoriz, gridStats.numDiagR, gridStats.numDiagL);
     startTimer();
+    resizeGameChat();
 }
 
 function startTimer() {
@@ -176,9 +192,10 @@ function fillWordBank(wordBankList) {
     }
 }
 
-function setGameStats(gridDensity, verticalWords, horizontalWords, diagonalRWords, diagonalLWords) {
+function setGameStats(gridDensity, verticalUWords, verticalDWords, horizontalWords, diagonalRWords, diagonalLWords) {
     gridDensityStat.innerHTML = "Grid Density: " + gridDensity.toString().substr(0, 4) + "%";
-    verticalWordsStat.innerHTML = "Vertical Words: " + verticalWords.toString().substr(0, 4) + "%";
+    verticalUWordsStat.innerHTML = "Vertical Up Words: " + verticalUWords.toString().substr(0, 4) + "%";
+    verticalDWordsStat.innerHTML = "Vertical Down Words: " + verticalDWords.toString().substr(0, 4) + "%";
     horizontalWordsStat.innerHTML = "Horizontal Words: " + horizontalWords.toString().substr(0, 4) + "%";
     diagonalRWordsStat.innerHTML = "Diagonal Right Words: " + diagonalRWords.toString().substr(0, 4) + "%";
     diagonalLWordsStat.innerHTML = "Diagonal Left Words: " + diagonalLWords.toString().substr(0, 4) + "%";

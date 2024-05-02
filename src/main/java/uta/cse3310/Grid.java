@@ -561,12 +561,12 @@ public class Grid{
         this.numHoriz = (this.numHoriz/wordCount)*(100);
         this.numVertD = (this.numVertD/wordCount)*(100);
         this.numVertU = (this.numVertU/wordCount)*(100);
-        System.out.println(this.numHoriz);
+        /*System.out.println(this.numHoriz);
         System.out.println(this.numVertD);
         System.out.println(this.numVertU);
         System.out.println(this.numDiagL);
         System.out.println(this.numDiagR);
-        System.out.println(this.currentDens);
+        System.out.println(this.currentDens);*/
         return this.grid;
 	}
 }

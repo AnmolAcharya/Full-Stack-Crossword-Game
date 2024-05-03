@@ -283,7 +283,6 @@ function highlightWordOnGrid(firstLetter, secondLetter, playerColor) {
         const gridId = `gridItem-${x}-${y}`;
         const gridItem = document.getElementById(gridId);
         gridItem.style.backgroundColor = `${color}`;
-        gridItem.style.pointerEvents = 'none';
         if (gridItem == hintGridItem) {
             stopBlinking();
         }

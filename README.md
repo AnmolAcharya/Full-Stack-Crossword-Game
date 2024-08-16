@@ -7,4 +7,6 @@
 % mvn package
 % mvn exec:java -Dexec.mainClass=uta.cse3310.App
 
+LIVE ON: http://sp24.cse3310.org:9002/index.html
+
 

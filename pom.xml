@@ -96,6 +96,17 @@
         </plugin>
       </plugins>
     </pluginManagement>
+     <!-- 👇 Add this plugin block just below -->
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <mainClass>uta.cse3310.App</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
   <reporting>

@@ -1,5 +1,4 @@
-// let serverUrl = "ws://" + window.location.hostname + `:${parseInt(window.location.port) + 100}`;
-let serverUrl = "ws://localhost:9102";
+let serverUrl = "ws://" + window.location.hostname + `:${parseInt(window.location.port) + 100}`;
 let connection = new WebSocket(serverUrl);
 
 let userSession = {

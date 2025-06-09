@@ -34,23 +34,14 @@ wordGrid.innerHTML = '';
 // resize game chat
 function resizeGameChat() {
     const topControlHeight = document.querySelector(".topControls").offsetHeight;
+    console.log(topControlHeight);
+    // const leaderboardHeight = document.querySelector(".gameLeaderboard").offsetHeight;
     const leaderboardHeight = 525.5;
-    const padding = 32 + 24;
-    const minHeight = 200;
-    
-    let gameChatHeight = Math.max(
-        minHeight,
-        document.querySelector("html").offsetHeight - (topControlHeight + leaderboardHeight + padding)
-    );
-    
-    gameChat.style.height = gameChatHeight + "px";
+    console.log(leaderboardHeight);
+    let gameChatHeight = document.querySelector("html").offsetHeight - (topControlHeight + leaderboardHeight + 32 + 24);
+    console.log(document.querySelector("html").offsetHeight);
+    console.log(gameChatHeight);
     gameChat.style.maxHeight = gameChatHeight + "px";
-    
-    // Ensure messageList takes remaining space
-    const chatHeaderHeight = gameChat.querySelector("h2").offsetHeight;
-    const chatFormHeight = chatForm.offsetHeight;
-    const messageListHeight = gameChatHeight - chatHeaderHeight - chatFormHeight - 40; // 40px for padding
-    chatList.style.height = messageListHeight + "px";
 }
 
 // exiting game
@@ -202,12 +193,12 @@ function fillWordBank(wordBankList) {
 }
 
 function setGameStats(gridDensity, verticalUWords, verticalDWords, horizontalWords, diagonalRWords, diagonalLWords) {
-    gridDensityStat.innerHTML = `Grid Density <span>${gridDensity.toString().substr(0, 4)}%</span>`;
-    verticalUWordsStat.innerHTML = `Vertical Up Words <span>${verticalUWords.toString().substr(0, 4)}%</span>`;
-    verticalDWordsStat.innerHTML = `Vertical Down Words <span>${verticalDWords.toString().substr(0, 4)}%</span>`;
-    horizontalWordsStat.innerHTML = `Horizontal Words <span>${horizontalWords.toString().substr(0, 4)}%</span>`;
-    diagonalRWordsStat.innerHTML = `Diagonal Right Words <span>${diagonalRWords.toString().substr(0, 4)}%</span>`;
-    diagonalLWordsStat.innerHTML = `Diagonal Left Words <span>${diagonalLWords.toString().substr(0, 4)}%</span>`;
+    gridDensityStat.innerHTML = "Grid Density: " + gridDensity.toString().substr(0, 4) + "%";
+    verticalUWordsStat.innerHTML = "Vertical Up Words: " + verticalUWords.toString().substr(0, 4) + "%";
+    verticalDWordsStat.innerHTML = "Vertical Down Words: " + verticalDWords.toString().substr(0, 4) + "%";
+    horizontalWordsStat.innerHTML = "Horizontal Words: " + horizontalWords.toString().substr(0, 4) + "%";
+    diagonalRWordsStat.innerHTML = "Diagonal Right Words: " + diagonalRWords.toString().substr(0, 4) + "%";
+    diagonalLWordsStat.innerHTML = "Diagonal Left Words: " + diagonalLWords.toString().substr(0, 4) + "%";
 }
 
 wordGrid.addEventListener('click', function (event) {

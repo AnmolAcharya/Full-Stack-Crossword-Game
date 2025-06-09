@@ -12,6 +12,7 @@
 
   <!--Landing Page / Enter User Name-->
   <div id="landingScreen" class="">
+    <h1>Enter your player name to start</h1>
     <form class="usernameForm">
       <span class="errorMessage">Sorry, this name is already taken.</span>
       <input type="text" class="usernameInput" maxlength="12">
@@ -22,7 +23,6 @@
 
   <!--Lobby-->
   <div id="lobbyScreen" class="hidden">
-    <h1 class="lobby-title"></h1>
     <div class="allTimeLeaderboard">
       <h2>All-Time Leaderboard</h2>
       <div class="leaderLabels">
@@ -36,7 +36,7 @@
     </div>
 
     <div class="gameMenu">
-      <h2>Game Selection</h2>
+      <h2>Select a game from the list or create a new game.</h2>
       <div class="menuActions">
         <button class="createGame">Create Game</button>
         <button class="joinGame" disabled>Join Game</button>
@@ -99,15 +99,12 @@
       <div class="topControls">
         <button class="exitButton">Exit</button>
         <div class="gameStats">
-          <h3>Word Distribution Guide</h3>
-          <div class="stats-container">
-            <p id="gridDensity">Grid Density <span>0.71%</span></p>
-            <p id="verticalUPercentage">Vertical Up Words <span>23%</span></p>
-            <p id="verticalDPercentage">Vertical Down Words <span>23%</span></p>
-            <p id="horizontalPercentage">Horizontal Words <span>18%</span></p>
-            <p id="diagonalRPercentage">Diagonal Right Words <span>21%</span></p>
-            <p id="diagonalLPercentage">Diagonal Left Words <span>22%</span></p>
-          </div>
+          <p id="gridDensity">Grid Density: 0.71</p>
+          <p id="verticalUPercentage">Vertical Up Words: 23%</p>
+          <p id="verticalDPercentage">Vertical Down Words: 23%</p>
+          <p id="horizontalPercentage">Horizontal Words: 18%</p>
+          <p id="diagonalRPercentage">Diagonal Right Words: 21%</p>
+          <p id="diagonalLPercentage">Diagonal Left Words: 22%</p>
         </div>
         <div class="gameTimer">
           <p>Time Remaining:</p>
@@ -149,12 +146,11 @@
         </div>
       </div>
       <div class="gameChat">
-        <h2>CHATBOT</h2>
         <ul class="messageList">
         </ul>
         <form class="chatForm">
           <input type="text" class="chatInput" maxlength="140" placeholder="Type a message..." />
-          <button type="submit" class="chatButton">Send</button>
+          <button type="submit" class="chatButton"></button>
         </form>
       </div>
     </div>

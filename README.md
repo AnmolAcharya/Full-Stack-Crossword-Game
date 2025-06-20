@@ -1,6 +1,6 @@
 # WordRush: Real-Time Multiplayer Crossword Game
 
-MVP Demo Link: https://wr.bijeshmanstha.com.np/ (Might have some CSS issues)
+Temporary MVP Demo Link: https://wr.bijeshmanstha.com.np/ (Might have some CSS issues)
 
 **WordRush** is a full-stack multiplayer crossword game designed for 2–4 players. It features real-time gameplay, a Java-based backend with clean OOP design, and a responsive JavaScript frontend. Players can compete, chat, and solve crosswords together in real time.
 
